@@ -5,10 +5,14 @@
  */
 package ultimatechat;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author The ZumBot 2.0
  */
-public class FileSenderView {
+public class FileSenderView extends JFrame{
+ 
+    
     
 }
