@@ -20,7 +20,7 @@ public class UltimateChat implements Runnable {
     
     public UltimateChat(){
         mainView = new MainView(this);
-        
+        System.out.println("hej");
     }
 
     /**
