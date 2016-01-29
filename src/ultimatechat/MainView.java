@@ -5,6 +5,7 @@
  */
 package ultimatechat;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -33,7 +34,7 @@ public class MainView extends JFrame {
         super("UltimateChat");
         //Set frame settings
         setPreferredSize(new Dimension(1000, 1000));
-        setLayout(new FlowLayout());
+        setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         conversationTabList = new ArrayList();
@@ -75,6 +76,10 @@ public class MainView extends JFrame {
 
         pack();
         setVisible(true);
+    }
+     
+    public String getTabTitle (int index){
+        return chooseConversationPanel.getTitleAt(index);
     }
 
     private void addConversation() {
