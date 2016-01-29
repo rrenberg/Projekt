@@ -5,10 +5,35 @@
  */
 package ultimatechat;
 
+import java.awt.FlowLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 /**
  *
  * @author The ZumBot 2.0
  */
-public class ConnectView {
-    
+public class ConnectView 
+{
+    public ConnectView(){
+        // Create textfields and panel for the Dialog
+        JTextField portTextField = new JTextField(6);
+        JTextField addressTextField = new JTextField(6);
+        
+        JPanel dialogPanel = new JPanel();
+        
+        // Add textfields to the dialog
+        dialogPanel.add(new JLabel("IP:"));
+        dialogPanel.add(addressTextField);
+        dialogPanel.setLayout(new FlowLayout());
+        dialogPanel.add(new JLabel("Port:"));
+        dialogPanel.add(portTextField);
+        
+        JOptionPane.showConfirmDialog(null, dialogPanel,
+                "Connect", JOptionPane.CANCEL_OPTION);
+        
+        
+    }
 }
