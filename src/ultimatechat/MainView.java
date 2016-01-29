@@ -48,7 +48,7 @@ public class MainView extends JFrame {
         //Add + tab
         chooseConversationPanel.addTab(null, null);
 
-        JButton addTabButton = new JButton("    +    ");
+        JButton addTabButton = new JButton("    -    ");
         addTabButton.setOpaque(false); //
         addTabButton.setBorder(null);
         addTabButton.setContentAreaFilled(false);
