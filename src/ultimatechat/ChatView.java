@@ -7,6 +7,11 @@ package ultimatechat;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -29,22 +34,24 @@ public class ChatView extends JPanel {
     public ChatView(){
         
         //Test ram för testande av klassen
-        JFrame frame = new JFrame("TestFrame");
+        //JFrame frame = new JFrame("TestFrame");
         
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setSize(800,700);
         
   
         //Sätter alla fält
         sendTextArea = new JTextArea("<Wirte your message here>",5,40);
-        showTextAreayou = new JTextArea(15,25);
-        showTextAreaothers = new JTextArea(15,25);
+        showTextAreayou = new JTextArea(25,40);
+        showTextAreaothers = new JTextArea(25,40);
         sendFileButton = new JButton("SendFile");
         sendTextButton = new JButton("SendText");
         selectEncryption = new JComboBox();
         selectColor = new JButton("Color");
         connectButton = new JButton("Connect");
         //controller = incontroller;
+        
+        
        
         sendTextArea.setLineWrap(true);
         showTextAreayou.setLineWrap(true);
@@ -135,8 +142,17 @@ public class ChatView extends JPanel {
         //this.add(underButtonsPanel);
         //this.setPreferredSize(new Dimension(600,600));
         
-        frame.add(this);
-        frame.pack();
+        //frame.add(this);
+        //frame.pack();
+        
+        showTextAreayou.setForeground(Color.red);
+        showTextAreaothers.setForeground(Color.BLUE);
+        
+        showTextAreayou.setEditable(false);
+        showTextAreaothers.setEditable(false);
+        showTextAreayou.append("Johan: Hej");
+        showTextAreaothers.append("\n"+"Erik: Hej");
+        showTextAreayou.append("\n"+"\n"+"Johan: Vad gör du?");
         
         chatPanel.setVisible(true);
         sendtextPanel.setVisible(true);
@@ -144,7 +160,7 @@ public class ChatView extends JPanel {
         underButtonsPanel.setVisible(true);
         this.setVisible(true);
         
-        frame.setVisible(true);
+        //frame.setVisible(true);
         
         
     }
