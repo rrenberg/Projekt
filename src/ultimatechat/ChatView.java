@@ -7,9 +7,16 @@ package ultimatechat;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,46 +25,69 @@ import java.util.logging.Logger;
  *
  * @author The ZumBot 2.0
  */
-public class ChatView extends JPanel {
+public class ChatView extends JPanel implements ActionListener {
     
     private JPanel userPanel;
     private JTextArea sendTextArea;
     private JTextArea showTextAreayou;
-    private JTextArea showTextAreaothers;
+    //private JTextArea showTextAreaothers;
+    private JTextArea myText;
+    private JScrollPane showTextArea;
     private JButton sendFileButton;
     private JButton sendTextButton;
     private JComboBox selectEncryption;
     private JButton selectColor;
     private JButton connectButton;
     private ConversationController controller;
+    //private String[] myText = new String[25];
+    //private String[] othersText = new String[25];
+    private JPanel chatPanel;
     
-    public ChatView(){
+    public ChatView(ConversationController inController){
         
-        //Test ram för testande av klassen
-        //JFrame frame = new JFrame("TestFrame");
+        //Sätter text arrayerna
+        //for(Integer i=0; i < myText.length;i++){
+        //    myText[i] = "\n";
+       // }
         
-        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setSize(800,700);
-        
+        //for(Integer i=0; i < othersText.length;i++){
+        //    othersText[i] = "\n";
+        //}
   
         //Sätter alla fält
+        controller = inController;
         sendTextArea = new JTextArea("<Wirte your message here>",5,40);
         showTextAreayou = new JTextArea(25,40);
-        showTextAreaothers = new JTextArea(25,40);
+        //showTextAreaothers = new JTextArea(25,40);
+        chatPanel = new JPanel();
+        chatPanel.setLayout(new BoxLayout(chatPanel,BoxLayout.Y_AXIS));
+        showTextArea = new JScrollPane(chatPanel);
+        myText = new JTextArea();
+        chatPanel.add(myText);
+        
         sendFileButton = new JButton("SendFile");
         sendTextButton = new JButton("SendText");
         selectEncryption = new JComboBox();
         selectColor = new JButton("Color");
         connectButton = new JButton("Connect");
+        connectButton.addActionListener(this);
+        
         //controller = incontroller;
         
+        sendTextArea.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                sendTextArea.setText("");
+            }});
         
-       
+        
+        showTextArea.setPreferredSize(new Dimension(950,500));
+        showTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         sendTextArea.setLineWrap(true);
-        showTextAreayou.setLineWrap(true);
-        showTextAreaothers.setLineWrap(true);
+        //showTextAreayou.setLineWrap(true);
+        //showTextAreaothers.setLineWrap(true);
         
-        JPanel chatPanel = new JPanel();
+        
         JPanel sendtextPanel = new JPanel();
         JPanel underButtonsPanel = new JPanel();
         JPanel ButtonPanel = new JPanel();
@@ -67,8 +97,8 @@ public class ChatView extends JPanel {
         
         
         chatPanel.setLayout(new GridLayout(1,2));
-        chatPanel.add(showTextAreayou);
-        chatPanel.add(showTextAreaothers);
+        //chatPanel.add(showTextAreayou);
+        //chatPanel.add(showTextAreaothers);
         
         c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 0;
@@ -77,7 +107,7 @@ public class ChatView extends JPanel {
         c.gridheight = 10;
         c.weightx = 1;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
-        this.add(chatPanel,c);
+        this.add(showTextArea,c);
         
         sendtextPanel.add(sendTextArea);
         
@@ -145,7 +175,7 @@ public class ChatView extends JPanel {
         //frame.add(this);
         //frame.pack();
         
-        showTextAreayou.setForeground(Color.red);
+        /*showTextAreayou.setForeground(Color.red);
         showTextAreaothers.setForeground(Color.BLUE);
         
         showTextAreayou.setEditable(false);
@@ -153,6 +183,12 @@ public class ChatView extends JPanel {
         showTextAreayou.append("Johan: Hej");
         showTextAreaothers.append("\n"+"Erik: Hej");
         showTextAreayou.append("\n"+"\n"+"Johan: Vad gör du?");
+        */
+        
+        
+        this.addMyText("11111Hej Detta är min text: hasdhkjsaasäfjlsajfgösahgökhsaökhgöksahgökhsaköghsaköghkasöhgökashköghaskghsaökghköashgkösahgkögfjlasgfjgsadjkfgkjagfjlasghfljgaslfgaslfgljsagfjlsagljfgaslfgjlasgflj");
+        this.addOthersText("222222Hej Detta är min text: hasdhkjsaasäfjlsajfgösahgökhsaökhgöksahgökhsaköghsaköghkasöhgökashköghaskghsaökghköashgkösahgkögfjlasgfjgsadjkfgkjagfjlasghfljgaslfgaslfgljsagfjlsagljfgaslfgjlasgflj");
+        this.addOthersText("33333Hej Detta är min text: hasdhkjsaasäfjlsajfgösahgökhsaökhgöksahgökhsaköghsaköghkasöhgökashköghaskghsaökghköashgkösahgkögfjlasgfjgsadjkfgkjagfjlasghfljgaslfgaslfgljsagfjlsagljfgaslfgjlasgflj");
         
         chatPanel.setVisible(true);
         sendtextPanel.setVisible(true);
@@ -163,6 +199,40 @@ public class ChatView extends JPanel {
         //frame.setVisible(true);
         
         
+    }
+    
+    public void addMyText(String inText){
+        myText.append(inText +"\n");
+        //myText.setMargin(new Insets(0,0,0,400));
+        myText.setAlignmentY(TOP_ALIGNMENT);
+        myText.setLineWrap(true);
+        
+        
+    }
+    
+    public void addOthersText(String inoText){
+        myText.append(inoText+"\n");
+        //myText.setMargin(new Insets(0,400,0,0));
+        myText.setAlignmentY(TOP_ALIGNMENT);
+        myText.setLineWrap(true);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==connectButton){
+            ConnectView conView = new ConnectView();
+            System.out.println("Tjohej");
+            try {
+                Socket clientsocket = new Socket(conView.getAddress(),conView.getPort());
+                DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
+                DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
+                
+                controller.addClient(outStream, inStream);
+            } catch (IOException ex) {
+                Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
 }
