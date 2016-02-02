@@ -6,8 +6,16 @@
 package ultimatechat;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.swing.Box.createHorizontalStrut;
 import static javax.swing.Box.createVerticalStrut;
 import javax.swing.BoxLayout;
@@ -29,14 +37,34 @@ public class UltimateChat implements Runnable {
     ArrayList<ConversationController> conversationControllerList;
     int port;
     String name;
+    ServerSocket serverSocket;
+    XMLParser xmlParser;
     
     public UltimateChat() {
         mainView = new MainView(this);
-        conversationControllerList = new ArrayList<>();
-        //createDialogForNameAndPort();
-        int answer= createDialogForConnectionRequest("Johan");
+        createDialogForNameAndPort();
+        createNewConversationController();
+        mainView.addConversation();
+    
+        
+        Thread t = new Thread(this);
+        t.start();
+        
+        ArrayList answer= createDialogForConnectionRequest("Kalle");
+        System.out.println((int)answer.get(0));
+        xmlParser = new XMLParser();
+        
+        
+        //conversationControllerList.add(new ConversationController("Johan",3));
         //ConnectView v = new ConnectView();
         
+    }
+    
+    public void createNewConversationController(){
+        ConversationController c = new ConversationController(name,Color.BLACK);
+        
+        conversationControllerList = new ArrayList<>();
+        conversationControllerList.add(c);
     }
 
     /**
@@ -44,11 +72,49 @@ public class UltimateChat implements Runnable {
      */
     public static void main(String[] args) {
         new UltimateChat();
+        
     }
     
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            serverSocket = new ServerSocket(port);
+	} catch (IOException e) {
+	    System.out.println("Could not listen on port: 4444");
+	    System.exit(-1);
+            
+        while(true){
+            Socket clientsocket = null;
+            try{
+                clientsocket = serverSocket.accept();
+                DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
+                DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
+                String stringMessage = inStream.readUTF();
+                
+                //createDialogForNameAndPort();
+                ArrayList answer= createDialogForConnectionRequest(xmlParser.requestParser(stringMessage));
+                
+                if((int)answer.get(0) == 0){
+                    if((int) answer.get(1)==0){
+                       createNewConversationController();
+                       conversationControllerList.get(conversationControllerList.size()).addClient(outStream,inStream);
+                       mainView.addConversation();
+                    }else{
+                        conversationControllerList.get((int)answer.get(1)-1).addClient(outStream,inStream);
+                    }
+                }else if ((int)answer.get(0)==2){
+                    
+                }
+                
+                System.out.println("Inne i loopen");
+            }catch(Exception ex){
+                
+            }
+            
+            
+        }
+           
+    }
     }
     
     public void createDialogForNameAndPort(){
@@ -82,7 +148,7 @@ public class UltimateChat implements Runnable {
         mainView.add(upperPanel,BorderLayout.NORTH);
         mainView.show();
     }
-    public int createDialogForConnectionRequest(String name){
+    public ArrayList createDialogForConnectionRequest(String name){
               // Create textfields and panel for the Dialog
         //JTextField nameTextField = new JTextField(6
         //JTextField portTextField = new JTextField(6);
@@ -104,10 +170,16 @@ public class UltimateChat implements Runnable {
         dialogPanel.add(createVerticalStrut(30));
         dialogPanel.add(convDropDown);
         
-        
-        return JOptionPane.showConfirmDialog(null, dialogPanel,
-                "Connect reqeust", JOptionPane.CANCEL_OPTION);
+        ArrayList answers = new ArrayList<>();
+        answers.add(JOptionPane.showConfirmDialog(null, dialogPanel,
+                "Connect reqeust", JOptionPane.CANCEL_OPTION));
+        answers.add(convDropDown.getSelectedIndex());
+        return answers;
         
        
+    }
+    
+    public ConversationController getConvController(){
+        return conversationControllerList.get(conversationControllerList.size()-1);
     }
 }
