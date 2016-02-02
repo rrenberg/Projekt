@@ -17,6 +17,11 @@ import javax.swing.JTextField;
  */
 public class ConnectView 
 {
+    private Integer port;
+    private String address;
+            
+            
+            
     public ConnectView(){
         // Create textfields and panel for the Dialog
         JTextField portTextField = new JTextField(6);
@@ -33,7 +38,16 @@ public class ConnectView
         
         JOptionPane.showConfirmDialog(null, dialogPanel,
                 "Connect", JOptionPane.CANCEL_OPTION);
+        port = Integer.valueOf(portTextField.getText());
+        address = addressTextField.getText();
         
-        
+    }
+    
+    public int getPort(){
+        return port;
+    }
+    
+    public String getAddress(){
+        return address;
     }
 }

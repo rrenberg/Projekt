@@ -5,10 +5,21 @@
  */
 package ultimatechat;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+
 /**
  *
  * @author The ZumBot 2.0
  */
 public class ClientThread {
     
+    private DataInputStream DIStream;
+    private DataOutputStream DOStream;
+    
+    
+    public ClientThread(DataInputStream inPutStream, DataOutputStream outPutStream){
+        DIStream = inPutStream;
+        DOStream = outPutStream;
+    }
 }

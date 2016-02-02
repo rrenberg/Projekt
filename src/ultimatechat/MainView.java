@@ -25,13 +25,14 @@ import javax.swing.JTabbedPane;
  */
 public class MainView extends JFrame {
 
-    private UltimateChat ultimateChat;
+    private final UltimateChat ultimateChat;
     private JTabbedPane chooseConversationPanel;
     private ArrayList<JPanel> conversationTabList;
     private int numberOfConversations;
 
-    public MainView(UltimateChat ultimateChat) {
+    public MainView(UltimateChat inultimateChat) {
         super("UltimateChat");
+        ultimateChat=inultimateChat;
         //Set frame settings
         setPreferredSize(new Dimension(1000, 1000));
         setLayout(new BorderLayout());
@@ -49,7 +50,7 @@ public class MainView extends JFrame {
         //Add + tab
         chooseConversationPanel.addTab(null, null);
 
-        JButton addTabButton = new JButton("    -    ");
+        JButton addTabButton = new JButton("    +    ");
         addTabButton.setOpaque(false); //
         addTabButton.setBorder(null);
         addTabButton.setContentAreaFilled(false);
@@ -59,6 +60,7 @@ public class MainView extends JFrame {
 
         ActionListener listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                ultimateChat.createNewConversationController();
                 addConversation();
             }
         };
@@ -69,10 +71,10 @@ public class MainView extends JFrame {
         add(chooseConversationPanel);
         
         //Create start-conversation
-        addConversation();
+        //addConversation();
         
         //The first tab should be the selected tab 
-        chooseConversationPanel.setSelectedIndex(0);
+        
 
         pack();
         setVisible(true);
@@ -82,14 +84,16 @@ public class MainView extends JFrame {
         return chooseConversationPanel.getTitleAt(index);
     }
 
-    private void addConversation() {
+    public void addConversation() {
         numberOfConversations++;
         String title = "Conversation " + String.valueOf(numberOfConversations);
+        //JPanel j = new JPanel();
+        //j.add(new JButton("Hej"));
         
-        chooseConversationPanel.insertTab(null, null, new JPanel(), null, chooseConversationPanel.getTabCount() - 1);
+        chooseConversationPanel.insertTab(null, null, ultimateChat.getConvController().chatview , null, chooseConversationPanel.getTabCount() - 1);
         
         //create tab panel
-        JPanel tabPanel = new JPanel();
+        final JPanel tabPanel = new JPanel();
         tabPanel.add(new JLabel(title));
         
         //Create close-button
@@ -100,6 +104,7 @@ public class MainView extends JFrame {
         closeButton.setFocusPainted(false);
 
         tabPanel.add(closeButton);
+        tabPanel.setOpaque(false);
         
         chooseConversationPanel.setTabComponentAt(chooseConversationPanel.getTabCount() - 2, tabPanel);
         
@@ -112,7 +117,7 @@ public class MainView extends JFrame {
         closeButton.addActionListener(listener);
         
         //Set conversationPanel to Tab
-        
+        chooseConversationPanel.setSelectedIndex(0);
     }
 
 }
