@@ -33,6 +33,7 @@ public class ConversationController {
         color = inColor;
         chatview = new ChatView(this); 
         myParser = inParser;
+        clients = new ArrayList<>();
     }
     
     public void updateChatView(){
@@ -45,6 +46,7 @@ public class ConversationController {
     
     public void sendConnectionRequest(String inText){
         try {
+            System.out.println(myParser);
             clients.get(clients.size()-1).getOutPutStream().writeUTF(myParser.sendrequestToXML(inText));
         } catch (IOException ex) {
             Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);

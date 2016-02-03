@@ -45,6 +45,7 @@ public class UltimateChat implements Runnable {
     public UltimateChat() {
         mainView = new MainView(this);
         createDialogForNameAndPort();
+        xmlParser = new XMLParser();
         createNewConversationController();
         mainView.addConversation();
     
@@ -54,7 +55,7 @@ public class UltimateChat implements Runnable {
         
         ArrayList answer= createDialogForConnectionRequest("Kalle");
         System.out.println((int)answer.get(0));
-        xmlParser = new XMLParser();
+        System.out.println(xmlParser.sendrequestToXML("Hej!"));
         
         
         //conversationControllerList.add(new ConversationController("Johan",3));
@@ -79,15 +80,19 @@ public class UltimateChat implements Runnable {
     
     @Override
     public void run() {
+        System.out.println("Inne i run");
         try{
             serverSocket = new ServerSocket(port);
+            System.out.println("Inne i ServerSocket");
 	} catch (IOException e) {
 	    System.out.println("Could not listen on port: 4444");
 	    System.exit(-1);
+        }
             
         while(true){
             Socket clientsocket = null;
             try{
+                System.out.println("Lyssnar nu");
                 clientsocket = serverSocket.accept();
                 DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
                 DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
@@ -116,7 +121,7 @@ public class UltimateChat implements Runnable {
             
         }
            
-    }
+    
     }
     
     public void createDialogForNameAndPort(){
