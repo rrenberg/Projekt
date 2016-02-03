@@ -37,4 +37,8 @@ public class XMLParser {
         return DBuilder.parse(is).getDocumentElement().getTextContent();
     }
     
+    public String sendrequestToXML(String inText){
+        return "<message><request>"+inText+"</request></message>";
+    }
+    
 }

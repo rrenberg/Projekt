@@ -22,4 +22,8 @@ public class ClientThread {
         DIStream = inPutStream;
         DOStream = outPutStream;
     }
+    
+    public DataOutputStream getOutPutStream(){
+        return DOStream;
+    }
 }

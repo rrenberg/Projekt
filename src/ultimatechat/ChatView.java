@@ -229,6 +229,7 @@ public class ChatView extends JPanel implements ActionListener {
                 DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
                 
                 controller.addClient(outStream, inStream);
+                controller.sendConnectionRequest(conView.getTextMessage());
             } catch (IOException ex) {
                 Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
             }

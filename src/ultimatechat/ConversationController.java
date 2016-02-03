@@ -10,7 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,11 +26,13 @@ public class ConversationController {
     private String name;
     private Color color;
     private ArrayList<ClientThread> clients;
+    private XMLParser myParser;
     
-    public ConversationController(String inName, Color inColor){
+    public ConversationController(String inName, Color inColor,XMLParser inParser){
         name = inName;
         color = inColor;
         chatview = new ChatView(this); 
+        myParser = inParser;
     }
     
     public void updateChatView(){
@@ -36,6 +41,14 @@ public class ConversationController {
     
     public void addClient(DataOutputStream inOutStream, DataInputStream inInStream){
         clients.add(new ClientThread(inInStream, inOutStream));
+    }
+    
+    public void sendConnectionRequest(String inText){
+        try {
+            clients.get(clients.size()-1).getOutPutStream().writeUTF(myParser.sendrequestToXML(inText));
+        } catch (IOException ex) {
+            Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void KillclientThread(ClientThread inClient){

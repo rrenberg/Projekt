@@ -19,6 +19,7 @@ public class ConnectView
 {
     private Integer port;
     private String address;
+    private String textMessage;
             
             
             
@@ -26,6 +27,7 @@ public class ConnectView
         // Create textfields and panel for the Dialog
         JTextField portTextField = new JTextField(6);
         JTextField addressTextField = new JTextField(6);
+        JTextField TextField = new JTextField(15);
         
         JPanel dialogPanel = new JPanel();
         
@@ -35,11 +37,14 @@ public class ConnectView
         dialogPanel.setLayout(new FlowLayout());
         dialogPanel.add(new JLabel("Port:"));
         dialogPanel.add(portTextField);
+        dialogPanel.add(new JLabel("Message:"));
+        dialogPanel.add(TextField);
         
         JOptionPane.showConfirmDialog(null, dialogPanel,
                 "Connect", JOptionPane.CANCEL_OPTION);
         port = Integer.valueOf(portTextField.getText());
         address = addressTextField.getText();
+        textMessage = TextField.getText();
         
     }
     
@@ -49,5 +54,9 @@ public class ConnectView
     
     public String getAddress(){
         return address;
+    }
+    
+    public String getTextMessage(){
+        return textMessage;
     }
 }

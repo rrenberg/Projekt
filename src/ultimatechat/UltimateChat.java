@@ -11,8 +11,10 @@ import java.awt.FlowLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,7 +63,7 @@ public class UltimateChat implements Runnable {
     }
     
     public void createNewConversationController(){
-        ConversationController c = new ConversationController(name,Color.BLACK);
+        ConversationController c = new ConversationController(name,Color.BLACK,xmlParser);
         
         conversationControllerList = new ArrayList<>();
         conversationControllerList.add(c);
@@ -141,6 +143,12 @@ public class UltimateChat implements Runnable {
         
         //Add to name and port to MainView
         JPanel upperPanel = new JPanel();
+        try {
+            InetAddress IP=InetAddress.getLocalHost();
+            upperPanel.add(new JTextField("Your address: "+IP.getHostAddress()));
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(UltimateChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
        
         upperPanel.add(new JTextField("Your name: "+name));
         upperPanel.add(new JTextField("Port: "+String.valueOf(port)));
@@ -148,7 +156,7 @@ public class UltimateChat implements Runnable {
         mainView.add(upperPanel,BorderLayout.NORTH);
         mainView.show();
     }
-    public ArrayList createDialogForConnectionRequest(String name){
+    public ArrayList createDialogForConnectionRequest(String message){
               // Create textfields and panel for the Dialog
         //JTextField nameTextField = new JTextField(6
         //JTextField portTextField = new JTextField(6);
@@ -166,7 +174,7 @@ public class UltimateChat implements Runnable {
         JPanel dialogPanel = new JPanel();
         
         // Add textfields to the dialog
-        dialogPanel.add(new JLabel(name+" wants to connect"));
+        dialogPanel.add(new JLabel("Message: "+message));
         dialogPanel.add(createVerticalStrut(30));
         dialogPanel.add(convDropDown);
         
