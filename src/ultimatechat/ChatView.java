@@ -66,9 +66,13 @@ public class ChatView extends JPanel implements ActionListener {
         chatPanel.add(myText);
         
         sendFileButton = new JButton("SendFile");
+        
         sendTextButton = new JButton("SendText");
+        sendTextButton.addActionListener(this);
+        
         selectEncryption = new JComboBox();
         selectColor = new JButton("Color");
+        
         connectButton = new JButton("Connect");
         connectButton.addActionListener(this);
         
@@ -234,6 +238,12 @@ public class ChatView extends JPanel implements ActionListener {
             } catch (IOException ex) {
                 Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        
+        if(e.getSource() == sendTextButton){
+            String myText = sendTextArea.getText();
+            addMyText(myText);
+            
         }
     }
     

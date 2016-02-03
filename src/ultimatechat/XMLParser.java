@@ -5,6 +5,7 @@
  */
 package ultimatechat;
 
+import java.awt.Color;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +40,12 @@ public class XMLParser {
     
     public String sendrequestToXML(String inText){
         return "<message><request>"+inText+"</request></message>";
+    }
+    
+    public String sendText(String inText, String inName, Color incolor){
+        return "<message sender=\""+inName+"\">"+"<text color=\"#"+
+                Integer.toHexString(incolor.getRGB())+"\">"+inText+
+                "</text></message>";
     }
     
 }

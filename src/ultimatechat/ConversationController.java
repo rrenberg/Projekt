@@ -53,6 +53,16 @@ public class ConversationController {
         }
     }
     
+    public void sendText(String inText){
+        for(ClientThread i:clients){
+            try {
+                i.getOutPutStream().writeUTF(myParser.sendText(inText,name,color));
+            } catch (IOException ex) {
+                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     private void KillclientThread(ClientThread inClient){
         
     }

@@ -55,7 +55,7 @@ public class UltimateChat implements Runnable {
         
         ArrayList answer= createDialogForConnectionRequest("Kalle");
         System.out.println((int)answer.get(0));
-        System.out.println(xmlParser.sendrequestToXML("Hej!"));
+        System.out.println(Color.BLACK);
         
         
         //conversationControllerList.add(new ConversationController("Johan",3));
