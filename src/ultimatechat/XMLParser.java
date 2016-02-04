@@ -49,27 +49,34 @@ public class XMLParser {
     }
     
     public String sendrequestToXML(String inText){
-        return "<message><request>"+inText+"</request></message>";
+        return "<message><request>"+rewriteTags(inText)+"</request></message>";
     }
     
     public String sendText(String inText, String inName, Color incolor){
-        return "<message sender=\""+inName+"\">"+"<text color=\"#"+
-                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+inText+
+        System.out.println("<message sender=\""+rewriteTags(inName)+"\">"+"<text color=\"#"+
+                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+rewriteTags(inText)+
+                "</text></message>");
+        return "<message sender=\""+rewriteTags(inName)+"\">"+"<text color=\"#"+
+                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+rewriteTags(inText)+
                 "</text></message>";
     }
     
     public ArrayList unParseXML(String inXML){
         
         ArrayList inFormation = new ArrayList<>();
+        
         try {
-            inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getDocumentElement().getAttribute("sender"));
-            NodeList nList = DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text");
+            Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
+            
+           // doc.setTextContent(unrewriteTags(doc.getTextContent()));
+            inFormation.add(doc.getDocumentElement().getAttribute("sender"));
+            NodeList nList = doc.getElementsByTagName("text");
             Node nNode = nList.item(0);
             Element eElement = (Element) nNode;
             System.out.println(eElement.getAttribute("color"));
             inFormation.add(eElement.getAttribute("color"));
 
-            inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getTextContent());
+            inFormation.add(unrewriteTags(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getTextContent()));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
             //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
@@ -82,5 +89,13 @@ public class XMLParser {
         
         return inFormation;
     }
-    
+    public String rewriteTags(String inText){
+        String newString = inText.replace(">", "&gt");
+        return newString.replace("<", "&lt");
+    }
+    public String unrewriteTags(String inText){
+        
+        String newString = inText.replace("&gt", ">");
+        return newString.replace("&lt", ">");
+    }
 }
