@@ -29,6 +29,7 @@ public class MainView extends JFrame {
     private JTabbedPane chooseConversationPanel;
     private ArrayList<JPanel> conversationTabList;
     private int numberOfConversations;
+    private ArrayList activeConversations = new ArrayList<>();
 
     public MainView(UltimateChat inultimateChat) {
         super("UltimateChat");
@@ -87,6 +88,8 @@ public class MainView extends JFrame {
     public void addConversation() {
         numberOfConversations++;
         String title = "Conversation " + String.valueOf(numberOfConversations);
+        activeConversations.add("Conversation " + String.valueOf(numberOfConversations));
+        
         //JPanel j = new JPanel();
         //j.add(new JButton("Hej"));
         
@@ -95,6 +98,8 @@ public class MainView extends JFrame {
         //create tab panel
         final JPanel tabPanel = new JPanel();
         tabPanel.add(new JLabel(title));
+        activeConversations.add(title);
+        activeConversations.add(ultimateChat.getConvController());
         
         //Create close-button
         JButton closeButton = new JButton("   X   ");
@@ -110,7 +115,11 @@ public class MainView extends JFrame {
         
         ActionListener listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                ultimateChat.getConvControllerList().remove(chooseConversationPanel.indexOfTabComponent(tabPanel));
                 chooseConversationPanel.removeTabAt(chooseConversationPanel.indexOfTabComponent(tabPanel));
+                
+                
+                
             }
         };
         
@@ -119,5 +128,8 @@ public class MainView extends JFrame {
         //Set conversationPanel to Tab
         chooseConversationPanel.setSelectedIndex(0);
     }
-
+    
+    private void removeActiveConv(JPanel inPanel){
+        //inPanel.t
+    }
 }

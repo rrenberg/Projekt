@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  */
 public class ConversationController {
     
+    UltimateChat myUltimateChat;
     ChatView chatview;
     private Sender sender;
     private String name;
@@ -29,12 +30,13 @@ public class ConversationController {
     private ArrayList<ClientThread> clients;
     private XMLParser myParser;
     
-    public ConversationController(String inName, Color inColor,XMLParser inParser){
+    public ConversationController(String inName, Color inColor,XMLParser inParser, UltimateChat inUltimatechat){
         name = inName;
         color = inColor;
         chatview = new ChatView(this); 
         myParser = inParser;
         clients = new ArrayList<>();
+        myUltimateChat = inUltimatechat;
     }
     
     public void recieveTextMessage(String inName, Color inColor, String inText){
@@ -74,9 +76,14 @@ public class ConversationController {
         return color;
     }
     
+    public UltimateChat getUltimateChat(){
+        return myUltimateChat;
+    }
+    
     public void setColor(Color inColor){
         color=inColor;
     }
+    
     
     private void KillclientThread(ClientThread inClient){
         

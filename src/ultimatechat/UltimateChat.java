@@ -48,6 +48,7 @@ public class UltimateChat implements Runnable {
         mainView = new MainView(this);
         createDialogForNameAndPort();
         xmlParser = new XMLParser();
+        conversationControllerList = new ArrayList<>();
         createNewConversationController();
         mainView.addConversation();
     
@@ -55,9 +56,6 @@ public class UltimateChat implements Runnable {
         Thread t = new Thread(this);
         t.start();
         
-        ArrayList answer= createDialogForConnectionRequest("Kalle");
-        System.out.println((int)answer.get(0));
-        System.out.println(Color.BLACK);
         
         
         //conversationControllerList.add(new ConversationController("Johan",3));
@@ -66,9 +64,8 @@ public class UltimateChat implements Runnable {
     }
     
     public void createNewConversationController(){
-        ConversationController c = new ConversationController(name,Color.BLUE,xmlParser);
+        ConversationController c = new ConversationController(name,Color.BLUE,xmlParser,this);
         
-        conversationControllerList = new ArrayList<>();
         conversationControllerList.add(c);
     }
 
@@ -103,7 +100,8 @@ public class UltimateChat implements Runnable {
                 String stringMessage = inStream.readUTF();
                 
                 //createDialogForNameAndPort();
-                ArrayList answer= createDialogForConnectionRequest(xmlParser.requestParser(stringMessage));
+                CreateDialogForConnectionRequest C= new CreateDialogForConnectionRequest(xmlParser.requestParser(stringMessage), conversationControllerList, mainView);
+                ArrayList answer= C.createDialogForConnectionRequestPopup();
                 
                 if((int)answer.get(0) == 0){
                     if((int) answer.get(1)==0){
@@ -166,40 +164,12 @@ public class UltimateChat implements Runnable {
         mainView.add(upperPanel,BorderLayout.NORTH);
         mainView.show();
     }
-    public ArrayList createDialogForConnectionRequest(String message){
-              // Create textfields and panel for the Dialog
-        //JTextField nameTextField = new JTextField(6
-        //JTextField portTextField = new JTextField(6);
-        
-        String[] conversations = new String[conversationControllerList.size()+1];
-        //String[] conversations = new String[1];
-        conversations[0]="<New conversation>";
-        
-        for(int i=1;i<conversationControllerList.size();i++){
-            System.out.println(i);
-            System.out.println(mainView.getTabTitle(i-1));
-            conversations[i] = mainView.getTabTitle(i-1);
-        }
-        
-        JComboBox convDropDown = new JComboBox(conversations);
-        
-        JPanel dialogPanel = new JPanel();
-        
-        // Add textfields to the dialog
-        dialogPanel.add(new JLabel("Message: "+message));
-        dialogPanel.add(createVerticalStrut(30));
-        dialogPanel.add(convDropDown);
-        
-        ArrayList answers = new ArrayList<>();
-        answers.add(JOptionPane.showConfirmDialog(null, dialogPanel,
-                "Connect reqeust", JOptionPane.CANCEL_OPTION));
-        answers.add(convDropDown.getSelectedIndex());
-        return answers;
-        
-       
-    }
     
     public ConversationController getConvController(){
         return conversationControllerList.get(conversationControllerList.size()-1);
+    }
+    
+    public ArrayList getConvControllerList(){
+        return conversationControllerList;
     }
 }

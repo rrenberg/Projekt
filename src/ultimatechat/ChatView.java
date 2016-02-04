@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -74,6 +75,8 @@ public class ChatView extends JPanel implements ActionListener {
         chatPanel.add(myText);
         
         sendFileButton = new JButton("SendFile");
+        sendFileButton.addActionListener(this);
+        
         
         sendTextButton = new JButton("SendText");
         sendTextButton.addActionListener(this);
@@ -279,6 +282,11 @@ public class ChatView extends JPanel implements ActionListener {
             if(c!=null){
                 controller.setColor(c);
             }
+        }
+        
+        if(e.getSource()==sendFileButton){
+            CreateDialogForConnectionRequest C = new CreateDialogForConnectionRequest("Hej", controller.getUltimateChat().getConvControllerList(), controller.getUltimateChat().mainView);
+            ArrayList answer= C.createDialogForConnectionRequestPopup();
         }
     }
     
