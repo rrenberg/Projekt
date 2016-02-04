@@ -18,6 +18,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -50,7 +53,7 @@ public class XMLParser {
     }
     
     public String sendText(String inText, String inName, Color incolor){
-        return "<?xml version=\" 1.0 \" encoding=\"utf-8\"?><message sender=\""+inName+"\">"+"<text color=\"#"+
+        return "<message sender=\""+inName+"\">"+"<text color=\"#"+
                 Integer.toHexString(incolor.getRGB())+"\">"+inText+
                 "</text></message>";
     }
@@ -61,7 +64,11 @@ public class XMLParser {
         try {
             inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getDocumentElement().getAttribute("sender"));
             
-            inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getAttributes().item(0));
+            NodeList nList = DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text");
+            Node nNode = nList.item(0);
+            Element eElement = (Element) nNode;
+            inFormation.add(eElement.getAttribute("color"));
+            
             inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getTextContent());
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
             //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
