@@ -90,12 +90,12 @@ public class XMLParser {
         return inFormation;
     }
     public String rewriteTags(String inText){
-        String newString = inText.replace(">", "&gt");
-        return newString.replace("<", "&lt");
+        String newString = inText.replace(">", "&gt;");
+        return newString.replace("<", "&lt;");
     }
     public String unrewriteTags(String inText){
         
-        String newString = inText.replace("&gt", ">");
-        return newString.replace("&lt", ">");
+        String newString = inText.replace("&gt;", ">");
+        return newString.replace("&lt;", ">");
     }
 }
