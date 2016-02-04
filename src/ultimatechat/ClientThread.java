@@ -24,6 +24,7 @@ public class ClientThread implements Runnable{
     private DataOutputStream DOStream;
     private XMLParser myXMLParser;
     private ConversationController myController;
+    private Boolean aLive;
     
     
     
@@ -32,6 +33,7 @@ public class ClientThread implements Runnable{
         DOStream = outPutStream;
         myXMLParser = inXMLParser;
         myController = inController;
+        aLive = true;
         
         
         Thread t = new Thread(this);
@@ -47,11 +49,9 @@ public class ClientThread implements Runnable{
         System.out.println("Inne i client run");
         String respons;
         try {
-            while((respons = DIStream.readUTF()) != null){
+            while(aLive){
                 
-                System.out.println("Hej2");
-                
-                
+                respons = DIStream.readUTF();
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
                 System.out.println("Hänger sig här");
 
@@ -63,5 +63,18 @@ public class ClientThread implements Runnable{
         } catch (IOException ex) {
             Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void killClientThread(){
+        try {
+            aLive = false;
+            DIStream.close();
+            DOStream.close();
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }

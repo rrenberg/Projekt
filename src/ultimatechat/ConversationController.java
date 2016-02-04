@@ -85,8 +85,15 @@ public class ConversationController {
     }
     
     
-    private void KillclientThread(ClientThread inClient){
-        
+    private void killConversation(){
+        for(ClientThread i: clients){
+            try {
+                i.getOutPutStream().writeUTF(myParser.sendText(name, "Loggar ut", Color.RED));
+                
+            } catch (IOException ex) {
+                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
    
