@@ -74,6 +74,10 @@ public class ConversationController {
         return color;
     }
     
+    public void setColor(Color inColor){
+        color=inColor;
+    }
+    
     private void KillclientThread(ClientThread inClient){
         
     }

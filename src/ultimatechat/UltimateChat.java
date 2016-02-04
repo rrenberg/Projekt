@@ -176,6 +176,8 @@ public class UltimateChat implements Runnable {
         conversations[0]="<New conversation>";
         
         for(int i=1;i<conversationControllerList.size();i++){
+            System.out.println(i);
+            System.out.println(mainView.getTabTitle(i-1));
             conversations[i] = mainView.getTabTitle(i-1);
         }
         

@@ -90,7 +90,7 @@ public class MainView extends JFrame {
         //JPanel j = new JPanel();
         //j.add(new JButton("Hej"));
         
-        chooseConversationPanel.insertTab(null, null, ultimateChat.getConvController().chatview , null, chooseConversationPanel.getTabCount() - 1);
+        chooseConversationPanel.insertTab("Conversation " + String.valueOf(numberOfConversations), null, ultimateChat.getConvController().chatview , null, chooseConversationPanel.getTabCount() - 1);
         
         //create tab panel
         final JPanel tabPanel = new JPanel();

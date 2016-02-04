@@ -80,6 +80,8 @@ public class ChatView extends JPanel implements ActionListener {
         
         selectEncryption = new JComboBox();
         selectColor = new JButton("Color");
+        selectColor.addActionListener(this);
+        
         
         connectButton = new JButton("Connect");
         connectButton.addActionListener(this);
@@ -270,6 +272,13 @@ public class ChatView extends JPanel implements ActionListener {
             
             sendTextArea.setText("");
             
+        }
+        
+        if(e.getSource()== selectColor){
+            Color c = JColorChooser.showDialog(null,"Choose a Color", controller.getColor());
+            if(c!=null){
+                controller.setColor(c);
+            }
         }
     }
     
