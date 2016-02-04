@@ -6,6 +6,7 @@
 package ultimatechat;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,11 +26,13 @@ public class ClientThread implements Runnable{
     private ConversationController myController;
     
     
+    
     public ClientThread(DataInputStream inPutStream, DataOutputStream outPutStream, XMLParser inXMLParser, ConversationController inController){
         DIStream = inPutStream;
         DOStream = outPutStream;
         myXMLParser = inXMLParser;
         myController = inController;
+        
         
         Thread t = new Thread(this);
         t.start();
@@ -41,16 +44,22 @@ public class ClientThread implements Runnable{
 
     @Override
     public void run() {
-        while(true){
-            try {
-                String stringMessage = DIStream.readUTF();
-                ArrayList<String> infoTextMessage = myXMLParser.unParseXML(stringMessage);
+        System.out.println("Inne i client run");
+        String respons;
+        try {
+            while((respons = DIStream.readUTF()) != null){
+                
+                System.out.println("Hej2");
+                
+                
+                ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
 
                 myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), infoTextMessage.get(2));
                 
-            } catch (IOException ex) {
-                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+           
             }
+        } catch (IOException ex) {
+            Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

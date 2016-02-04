@@ -6,8 +6,11 @@
 package ultimatechat;
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +32,7 @@ public class XMLParser {
   
     public XMLParser(){
         DBFactory = DocumentBuilderFactory.newInstance();
+        
         try {
             DBuilder = DBFactory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
@@ -46,20 +50,22 @@ public class XMLParser {
     }
     
     public String sendText(String inText, String inName, Color incolor){
-        return "<message sender=\""+inName+"\">"+"<text color=\"#"+
+        return "<?xml version=\" 1.0 \" encoding=\"utf-8\"?><message sender=\""+inName+"\">"+"<text color=\"#"+
                 Integer.toHexString(incolor.getRGB())+"\">"+inText+
                 "</text></message>";
     }
     
     public ArrayList unParseXML(String inXML){
-        InputSource is = new InputSource(new StringReader(inXML));
         
         ArrayList inFormation = new ArrayList<>();
         try {
-            DBuilder.parse(is).getElementById("message").getAttribute("sender");
-            inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
-            inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
-            inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
+            inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getDocumentElement().getAttribute("sender"));
+            
+            inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getAttributes().item(0));
+            inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getTextContent());
+            //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
+            //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
+            //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
         
         } catch (SAXException ex) {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);

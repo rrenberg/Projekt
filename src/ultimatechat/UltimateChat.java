@@ -8,9 +8,11 @@ package ultimatechat;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -96,6 +98,8 @@ public class UltimateChat implements Runnable {
                 clientsocket = serverSocket.accept();
                 DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
                 DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
+                
+               
                 String stringMessage = inStream.readUTF();
                 
                 //createDialogForNameAndPort();
@@ -104,10 +108,11 @@ public class UltimateChat implements Runnable {
                 if((int)answer.get(0) == 0){
                     if((int) answer.get(1)==0){
                        createNewConversationController();
-                       conversationControllerList.get(conversationControllerList.size()).addClient(outStream,inStream);
+                       conversationControllerList.get(conversationControllerList.size()-1).addClient(outStream,inStream);
+                      
                        mainView.addConversation();
                     }else{
-                        conversationControllerList.get((int)answer.get(1)-1).addClient(outStream,inStream);
+                       conversationControllerList.get((int)answer.get(1)-1).addClient(outStream,inStream);
                     }
                 }else if ((int)answer.get(0)==2){
                     

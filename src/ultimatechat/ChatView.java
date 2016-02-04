@@ -11,10 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Writer;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -66,7 +68,7 @@ public class ChatView extends JPanel implements ActionListener {
         chatPanel = new JPanel(new BorderLayout());
         //chatPanel.setLayout(new BoxLayout(chatPanel,BoxLayout.Y_AXIS));
         showTextArea = new JScrollPane(chatPanel);
-        showTextArea.setViewportView(chatPanel);
+        
        
         myText = new JTextPane();
         chatPanel.add(myText);
@@ -222,7 +224,7 @@ public class ChatView extends JPanel implements ActionListener {
             
         }
        
-        
+        showTextArea.setViewportView(chatPanel);
     }
     
     public void addOthersText(String inoText, Color inColor, String inName){
@@ -236,7 +238,7 @@ public class ChatView extends JPanel implements ActionListener {
         }catch(BadLocationException e){
             
         }
-
+showTextArea.setViewportView(chatPanel);
     }
 
     @Override
@@ -248,6 +250,7 @@ public class ChatView extends JPanel implements ActionListener {
                 Socket clientsocket = new Socket(conView.getAddress(),conView.getPort());
                 DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
                 DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
+                
                 
                 controller.addClient(outStream, inStream);
                 System.out.println(conView.getTextMessage());
