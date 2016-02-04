@@ -6,7 +6,9 @@
 package ultimatechat;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -14,6 +16,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -46,6 +49,25 @@ public class XMLParser {
         return "<message sender=\""+inName+"\">"+"<text color=\"#"+
                 Integer.toHexString(incolor.getRGB())+"\">"+inText+
                 "</text></message>";
+    }
+    
+    public ArrayList unParseXML(String inXML){
+        InputSource is = new InputSource(new StringReader(inXML));
+        
+        ArrayList inFormation = new ArrayList<>();
+        try {
+            DBuilder.parse(is).getElementById("message").getAttribute("sender");
+            inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
+            inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
+            inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
+        
+        } catch (SAXException ex) {
+            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return inFormation;
     }
     
 }

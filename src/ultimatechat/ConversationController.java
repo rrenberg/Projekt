@@ -36,12 +36,13 @@ public class ConversationController {
         clients = new ArrayList<>();
     }
     
-    public void updateChatView(){
+    public void recieveTextMessage(String inName, Color inColor, String inText){
+        chatview.addOthersText(inText, inColor, inName);
         
     }
     
     public void addClient(DataOutputStream inOutStream, DataInputStream inInStream){
-        clients.add(new ClientThread(inInStream, inOutStream));
+        clients.add(new ClientThread(inInStream, inOutStream, myParser, this));
     }
     
     public void sendConnectionRequest(String inText){
@@ -61,6 +62,14 @@ public class ConversationController {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public Color getColor(){
+        return color;
     }
     
     private void KillclientThread(ClientThread inClient){

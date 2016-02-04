@@ -19,6 +19,10 @@ import java.io.Writer;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 
 /**
@@ -31,7 +35,7 @@ public class ChatView extends JPanel implements ActionListener {
     private JTextArea sendTextArea;
     private JTextArea showTextAreayou;
     //private JTextArea showTextAreaothers;
-    private JTextArea myText;
+    private JTextPane myText;
     private JScrollPane showTextArea;
     private JButton sendFileButton;
     private JButton sendTextButton;
@@ -59,10 +63,12 @@ public class ChatView extends JPanel implements ActionListener {
         sendTextArea = new JTextArea("<Wirte your message here>",5,40);
         showTextAreayou = new JTextArea(25,40);
         //showTextAreaothers = new JTextArea(25,40);
-        chatPanel = new JPanel();
-        chatPanel.setLayout(new BoxLayout(chatPanel,BoxLayout.Y_AXIS));
+        chatPanel = new JPanel(new BorderLayout());
+        //chatPanel.setLayout(new BoxLayout(chatPanel,BoxLayout.Y_AXIS));
         showTextArea = new JScrollPane(chatPanel);
-        myText = new JTextArea();
+        showTextArea.setViewportView(chatPanel);
+       
+        myText = new JTextPane();
         chatPanel.add(myText);
         
         sendFileButton = new JButton("SendFile");
@@ -86,7 +92,7 @@ public class ChatView extends JPanel implements ActionListener {
         
         
         showTextArea.setPreferredSize(new Dimension(950,500));
-        showTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        //showTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         sendTextArea.setLineWrap(true);
         //showTextAreayou.setLineWrap(true);
         //showTextAreaothers.setLineWrap(true);
@@ -100,7 +106,7 @@ public class ChatView extends JPanel implements ActionListener {
         GridBagConstraints c = new GridBagConstraints();
         
         
-        chatPanel.setLayout(new GridLayout(1,2));
+        //chatPanel.setLayout(new GridLayout(1,2));
         //chatPanel.add(showTextAreayou);
         //chatPanel.add(showTextAreaothers);
         
@@ -191,8 +197,7 @@ public class ChatView extends JPanel implements ActionListener {
         
         
         this.addMyText("11111Hej Detta är min text: hasdhkjsaasäfjlsajfgösahgökhsaökhgöksahgökhsaköghsaköghkasöhgökashköghaskghsaökghköashgkösahgkögfjlasgfjgsadjkfgkjagfjlasghfljgaslfgaslfgljsagfjlsagljfgaslfgjlasgflj");
-        this.addOthersText("222222Hej Detta är min text: hasdhkjsaasäfjlsajfgösahgökhsaökhgöksahgökhsaköghsaköghkasöhgökashköghaskghsaökghköashgkösahgkögfjlasgfjgsadjkfgkjagfjlasghfljgaslfgaslfgljsagfjlsagljfgaslfgjlasgflj");
-        this.addOthersText("33333Hej Detta är min text: hasdhkjsaasäfjlsajfgösahgökhsaökhgöksahgökhsaköghsaköghkasöhgökashköghaskghsaökghköashgkösahgkögfjlasgfjgsadjkfgkjagfjlasghfljgaslfgaslfgljsagfjlsagljfgaslfgjlasgflj");
+        
         
         chatPanel.setVisible(true);
         sendtextPanel.setVisible(true);
@@ -206,19 +211,31 @@ public class ChatView extends JPanel implements ActionListener {
     }
     
     public void addMyText(String inText){
-        myText.append(inText +"\n");
-        //myText.setMargin(new Insets(0,0,0,400));
-        myText.setAlignmentY(TOP_ALIGNMENT);
-        myText.setLineWrap(true);
         
+        StyledDocument doc = myText.getStyledDocument();
+        Style style = myText.addStyle("Hej", null);
+        StyleConstants.setForeground(style, controller.getColor());
+        
+        try{
+            doc.insertString(doc.getLength(), inText+"\n", style);
+        }catch(BadLocationException e){
+            
+        }
+       
         
     }
     
-    public void addOthersText(String inoText){
-        myText.append(inoText+"\n");
-        //myText.setMargin(new Insets(0,400,0,0));
-        myText.setAlignmentY(TOP_ALIGNMENT);
-        myText.setLineWrap(true);
+    public void addOthersText(String inoText, Color inColor, String inName){
+        
+        StyledDocument doc = myText.getStyledDocument();
+        Style style = myText.addStyle("Hej", null);
+        StyleConstants.setForeground(style, inColor);
+ 
+        try{
+            doc.insertString(doc.getLength(), inName+ ": "+inoText+"\n", style);
+        }catch(BadLocationException e){
+            
+        }
 
     }
 
@@ -241,8 +258,13 @@ public class ChatView extends JPanel implements ActionListener {
         }
         
         if(e.getSource() == sendTextButton){
-            String myText = sendTextArea.getText();
-            addMyText(myText);
+            String myTextmessage = sendTextArea.getText();
+            String textToBeAdded = controller.getName()+": "+myTextmessage;
+            addMyText(textToBeAdded);
+            
+            controller.sendText(myTextmessage);
+            
+            sendTextArea.setText("");
             
         }
     }
