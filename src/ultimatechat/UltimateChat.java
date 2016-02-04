@@ -66,7 +66,7 @@ public class UltimateChat implements Runnable {
     }
     
     public void createNewConversationController(){
-        ConversationController c = new ConversationController(name,Color.BLACK,xmlParser);
+        ConversationController c = new ConversationController(name,Color.BLUE,xmlParser);
         
         conversationControllerList = new ArrayList<>();
         conversationControllerList.add(c);

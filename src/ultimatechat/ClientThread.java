@@ -53,9 +53,11 @@ public class ClientThread implements Runnable{
                 
                 
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
+                System.out.println("Hänger sig här");
 
                 myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), infoTextMessage.get(2));
                 
+                System.out.println("hänger sig efter");
            
             }
         } catch (IOException ex) {

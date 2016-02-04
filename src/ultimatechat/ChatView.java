@@ -232,13 +232,14 @@ public class ChatView extends JPanel implements ActionListener {
         StyledDocument doc = myText.getStyledDocument();
         Style style = myText.addStyle("Hej", null);
         StyleConstants.setForeground(style, inColor);
+        System.out.println("i others");
  
         try{
             doc.insertString(doc.getLength(), inName+ ": "+inoText+"\n", style);
         }catch(BadLocationException e){
             
         }
-showTextArea.setViewportView(chatPanel);
+
     }
 
     @Override

@@ -54,7 +54,7 @@ public class XMLParser {
     
     public String sendText(String inText, String inName, Color incolor){
         return "<message sender=\""+inName+"\">"+"<text color=\"#"+
-                Integer.toHexString(incolor.getRGB())+"\">"+inText+
+                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+inText+
                 "</text></message>";
     }
     
@@ -63,19 +63,19 @@ public class XMLParser {
         ArrayList inFormation = new ArrayList<>();
         try {
             inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getDocumentElement().getAttribute("sender"));
-            
             NodeList nList = DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text");
             Node nNode = nList.item(0);
             Element eElement = (Element) nNode;
+            System.out.println(eElement.getAttribute("color"));
             inFormation.add(eElement.getAttribute("color"));
-            
+
             inFormation.add(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getTextContent());
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
             //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
         
         } catch (SAXException ex) {
-            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+           Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
         }

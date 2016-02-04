@@ -38,8 +38,9 @@ public class ConversationController {
     }
     
     public void recieveTextMessage(String inName, Color inColor, String inText){
+        System.out.println("Före i recieve");
         chatview.addOthersText(inText, inColor, inName);
-        
+        System.out.println("Efter i recieve");
     }
     
     public void addClient(DataOutputStream inOutStream, DataInputStream inInStream){
