@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,26 +46,21 @@ public class ConversationController {
         System.out.println("Efter i recieve");
     }
     
-    public void addClient(DataOutputStream inOutStream, DataInputStream inInStream){
+    public void addClient(PrintWriter inOutStream, BufferedReader inInStream){
         clients.add(new ClientThread(inInStream, inOutStream, myParser, this));
     }
     
     public void sendConnectionRequest(String inText){
-        try {
-            System.out.println(myParser);
-            clients.get(clients.size()-1).getOutPutStream().writeUTF(myParser.sendrequestToXML(inText));
-        } catch (IOException ex) {
-            Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       
+            clients.get(clients.size()-1).getOutPutStream().println(myParser.sendrequestToXML(inText));
+       
     }
     
     public void sendText(String inText){
         for(ClientThread i:clients){
-            try {
-                i.getOutPutStream().writeUTF(myParser.sendText(inText,name,color));
-            } catch (IOException ex) {
-                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
+                i.getOutPutStream().println(myParser.sendText(inText,name,color));
+            
         }
     }
     
@@ -87,12 +83,10 @@ public class ConversationController {
     
     private void killConversation(){
         for(ClientThread i: clients){
-            try {
-                i.getOutPutStream().writeUTF(myParser.sendText(name, "Loggar ut", Color.RED));
+            
+                i.getOutPutStream().println(myParser.sendText(name, "Loggar ut", Color.RED));
                 
-            } catch (IOException ex) {
-                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
         }
     }
 

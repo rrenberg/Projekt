@@ -13,6 +13,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -93,11 +94,11 @@ public class UltimateChat implements Runnable {
             try{
                 System.out.println("Lyssnar nu");
                 clientsocket = serverSocket.accept();
-                DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
-                DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
+                BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
+                PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(),true);
                 
                
-                String stringMessage = inStream.readUTF();
+                String stringMessage = inStream.readLine();
                 
                 //createDialogForNameAndPort();
                 CreateDialogForConnectionRequest C= new CreateDialogForConnectionRequest(xmlParser.requestParser(stringMessage), conversationControllerList, mainView);

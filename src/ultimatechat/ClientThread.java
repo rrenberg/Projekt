@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,15 +21,15 @@ import java.util.logging.Logger;
  */
 public class ClientThread implements Runnable{
     
-    private DataInputStream DIStream;
-    private DataOutputStream DOStream;
+    private BufferedReader DIStream;
+    private PrintWriter DOStream;
     private XMLParser myXMLParser;
     private ConversationController myController;
     private Boolean aLive;
     
     
     
-    public ClientThread(DataInputStream inPutStream, DataOutputStream outPutStream, XMLParser inXMLParser, ConversationController inController){
+    public ClientThread(BufferedReader inPutStream, PrintWriter outPutStream, XMLParser inXMLParser, ConversationController inController){
         DIStream = inPutStream;
         DOStream = outPutStream;
         myXMLParser = inXMLParser;
@@ -40,7 +41,7 @@ public class ClientThread implements Runnable{
         t.start();
     }
     
-    public DataOutputStream getOutPutStream(){
+    public PrintWriter getOutPutStream(){
         return DOStream;
     }
 
@@ -51,7 +52,7 @@ public class ClientThread implements Runnable{
         try {
             while(aLive){
                 
-                respons = DIStream.readUTF();
+                respons = DIStream.readLine();
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
                 System.out.println("Hänger sig här");
 
