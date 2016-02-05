@@ -88,6 +88,10 @@ public class ConversationController {
         color=inColor;
     }
     
+    public ArrayList getClients(){
+        return clients;
+    }
+    
     
     public void killConversation(){
         for(ClientThread i: clients){
@@ -95,6 +99,8 @@ public class ConversationController {
             try {
                 i.getOutPutStream().writeUTF(myParser.sendText(name, "Loggar ut", Color.RED));
                 i.killClientThread();
+                clients.remove(i);
+               myUltimateChat.conversationControllerList.remove(this);
             } catch (IOException ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
