@@ -255,8 +255,8 @@ public class ChatView extends JPanel implements ActionListener {
             System.out.println("Tjohej");
             try {
                 Socket clientsocket = new Socket(conView.getAddress(),conView.getPort());
-                BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
-                PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(),true);
+                DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
+                DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
                 
                 
                 controller.addClient(outStream, inStream);

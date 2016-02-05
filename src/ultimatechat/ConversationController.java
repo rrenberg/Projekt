@@ -46,20 +46,28 @@ public class ConversationController {
         System.out.println("Efter i recieve");
     }
     
-    public void addClient(PrintWriter inOutStream, BufferedReader inInStream){
+    public void addClient(DataOutputStream inOutStream, DataInputStream inInStream){
         clients.add(new ClientThread(inInStream, inOutStream, myParser, this));
     }
     
     public void sendConnectionRequest(String inText){
        
-            clients.get(clients.size()-1).getOutPutStream().println(myParser.sendrequestToXML(inText));
+        try {
+            clients.get(clients.size()-1).getOutPutStream().writeUTF(myParser.sendrequestToXML(inText));
+        } catch (IOException ex) {
+            Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
        
     }
     
     public void sendText(String inText){
         for(ClientThread i:clients){
 
-                i.getOutPutStream().println(myParser.sendText(inText,name,color));
+            try {
+                i.getOutPutStream().writeUTF(myParser.sendText(inText,name,color));
+            } catch (IOException ex) {
+                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
         }
     }
@@ -84,7 +92,11 @@ public class ConversationController {
     private void killConversation(){
         for(ClientThread i: clients){
             
-                i.getOutPutStream().println(myParser.sendText(name, "Loggar ut", Color.RED));
+            try {
+                i.getOutPutStream().writeUTF(myParser.sendText(name, "Loggar ut", Color.RED));
+            } catch (IOException ex) {
+                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 
             
         }

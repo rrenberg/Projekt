@@ -21,15 +21,15 @@ import java.util.logging.Logger;
  */
 public class ClientThread implements Runnable{
     
-    private BufferedReader DIStream;
-    private PrintWriter DOStream;
+    private DataInputStream DIStream;
+    private DataOutputStream DOStream;
     private XMLParser myXMLParser;
     private ConversationController myController;
     private Boolean aLive;
     
     
     
-    public ClientThread(BufferedReader inPutStream, PrintWriter outPutStream, XMLParser inXMLParser, ConversationController inController){
+    public ClientThread(DataInputStream inPutStream, DataOutputStream outPutStream, XMLParser inXMLParser, ConversationController inController){
         DIStream = inPutStream;
         DOStream = outPutStream;
         myXMLParser = inXMLParser;
@@ -41,7 +41,7 @@ public class ClientThread implements Runnable{
         t.start();
     }
     
-    public PrintWriter getOutPutStream(){
+    public DataOutputStream getOutPutStream(){
         return DOStream;
     }
 
@@ -52,7 +52,7 @@ public class ClientThread implements Runnable{
         try {
             while(aLive){
                 
-                respons = DIStream.readLine();
+                respons = DIStream.readUTF();
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
                 System.out.println("Hänger sig här");
 

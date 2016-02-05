@@ -94,11 +94,11 @@ public class UltimateChat implements Runnable {
             try{
                 System.out.println("Lyssnar nu");
                 clientsocket = serverSocket.accept();
-                BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
-                PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(),true);
+                DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
+                DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
                 
                
-                String stringMessage = inStream.readLine();
+                String stringMessage = inStream.readUTF();
                 
                 //createDialogForNameAndPort();
                 CreateDialogForConnectionRequest C= new CreateDialogForConnectionRequest(xmlParser.requestParser(stringMessage), conversationControllerList, mainView);
