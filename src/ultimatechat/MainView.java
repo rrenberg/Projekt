@@ -115,9 +115,9 @@ public class MainView extends JFrame {
         
         ActionListener listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
-                
-                //ultimateChat.getConvControllerList().get(0).;
+
+                ConversationController c = (ConversationController) ultimateChat.getConvControllerList().get(chooseConversationPanel.indexOfTabComponent(tabPanel));
+                c.killConversation();
                 ultimateChat.getConvControllerList().remove(chooseConversationPanel.indexOfTabComponent(tabPanel));
                 chooseConversationPanel.removeTabAt(chooseConversationPanel.indexOfTabComponent(tabPanel));
 

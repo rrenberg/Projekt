@@ -61,8 +61,12 @@ public class ClientThread implements Runnable{
                 System.out.println("hänger sig efter");
            
             }
-        } catch (IOException ex) {
-            Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            try {
+                DIStream.close();
+            } catch (IOException ex1) {
+                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
     }
     

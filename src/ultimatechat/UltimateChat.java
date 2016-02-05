@@ -49,7 +49,7 @@ public class UltimateChat implements Runnable {
         mainView = new MainView(this);
         createDialogForNameAndPort();
         xmlParser = new XMLParser();
-        conversationControllerList = new ArrayList<>();
+        conversationControllerList = new ArrayList<ConversationController>();
         createNewConversationController();
         mainView.addConversation();
     
