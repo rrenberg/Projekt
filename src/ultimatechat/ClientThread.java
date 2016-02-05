@@ -80,7 +80,7 @@ public class ClientThread implements Runnable{
             DOStream.close();
             
             
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
         }
         

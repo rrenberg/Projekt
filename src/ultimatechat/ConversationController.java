@@ -101,7 +101,7 @@ public class ConversationController {
                 i.killClientThread();
                 //clients.remove(i);
                //myUltimateChat.conversationControllerList.remove(this);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
                 
