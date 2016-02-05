@@ -65,7 +65,7 @@ public class ClientThread implements Runnable{
             try {
                 DIStream.close();
                 DOStream.close();
-                myController.getClients().remove(this);
+                //myController.getClients().remove(this);
             } catch (IOException ex1) {
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex1);
             }

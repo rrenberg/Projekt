@@ -118,6 +118,7 @@ public class MainView extends JFrame {
 
                 ConversationController c = (ConversationController) ultimateChat.getConvControllerList().get(chooseConversationPanel.indexOfTabComponent(tabPanel));
                 c.killConversation();
+                //ultimateChat.conversationControllerList.remove(c);
                 ultimateChat.getConvControllerList().remove(chooseConversationPanel.indexOfTabComponent(tabPanel));
                 chooseConversationPanel.removeTabAt(chooseConversationPanel.indexOfTabComponent(tabPanel));
 
