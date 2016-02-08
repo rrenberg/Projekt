@@ -40,9 +40,19 @@ public class ConversationController {
         myUltimateChat = inUltimatechat;
     }
     
-    public void recieveTextMessage(String inName, Color inColor, String inText){
+    public void recieveTextMessage(String inName, Color inColor, String inText, ClientThread inClient){
         System.out.println("Före i recieve");
         chatview.addOthersText(inText, inColor, inName);
+        for(ClientThread i:clients){
+            if(i!=inClient){
+                try {
+                    i.getOutPutStream().writeUTF(myParser.sendText(inText,inName,inColor));
+                } catch (Exception ex) {
+                    Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        
         System.out.println("Efter i recieve");
     }
     
@@ -54,7 +64,7 @@ public class ConversationController {
        
         try {
             clients.get(clients.size()-1).getOutPutStream().writeUTF(myParser.sendrequestToXML(inText));
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
         }
        
@@ -65,7 +75,7 @@ public class ConversationController {
 
             try {
                 i.getOutPutStream().writeUTF(myParser.sendText(inText,name,color));
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
             
