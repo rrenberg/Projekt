@@ -63,28 +63,56 @@ public class XMLParser {
     
     public ArrayList unParseXML(String inXML){
         
-        ArrayList inFormation = new ArrayList<>();
+        ArrayList<String> inFormation = new ArrayList<>();
         
         try {
             Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
             
            // doc.setTextContent(unrewriteTags(doc.getTextContent()));
-            inFormation.add(doc.getDocumentElement().getAttribute("sender"));
+            //doc.getDocumentElement().normalize();
+            inFormation.add(((Element) (doc.getElementsByTagName("message").item(0))).getAttribute("sender"));
+            if(inFormation.get(0).length()==0){
+                throw new NullPointerException();
+            }
             NodeList nList = doc.getElementsByTagName("text");
             Node nNode = nList.item(0);
+            NodeList n = nNode.getChildNodes();
+            
             Element eElement = (Element) nNode;
+            String message = eElement.getTextContent();
+            NodeList nList2 = nNode.getChildNodes();
+            System.out.println(nNode.getTextContent());
+            for(int i =0; i<nList2.getLength();i++){
+                Node n2 = nList2.item(i);
+               if (n2.getNodeType() == Node.ELEMENT_NODE) {
+               Element e = (Element) n2;
+                //Element e = (Element) n2;
+                if(!e.getTagName().equals("fetstil") && !e.getTagName().equals("kursiv")){
+                    System.out.println(e.getTagName());
+                    nNode.removeChild(n2);
+                }
+                
+            }
+            }
+//            eElement.getElementsByTagName("fetstil").item(0).getTextContent();
             System.out.println(eElement.getAttribute("color"));
             inFormation.add(eElement.getAttribute("color"));
 
-            inFormation.add(unrewriteTags(DBuilder.parse(new InputSource(new StringReader(inXML))).getElementsByTagName("text").item(0).getTextContent()));
+            inFormation.add(unrewriteTags(nNode.getTextContent()));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
             //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
         
         } catch (SAXException ex) {
            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+           
+           return invalidXML(inFormation);
         } catch (IOException ex) {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+            return invalidXML(inFormation);
+        } catch (NullPointerException exp){
+            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, exp);
+            return invalidXML(inFormation);
         }
         
         return inFormation;
@@ -98,4 +126,17 @@ public class XMLParser {
         String newString = inText.replace("&gt;", ">");
         return newString.replace("&lt;", ">");
     }
+    
+    private ArrayList<String> invalidXML(ArrayList<String> inFormation){
+        ArrayList<String> errArray = new ArrayList<>();
+           if(inFormation.size()!=0){
+                errArray.add(inFormation.get(0));
+           }else{
+                   errArray.add("Okänd");
+           }
+           errArray.add((Integer.toHexString(Color.RED.getRGB()).substring(2)));
+           errArray.add("Kunde inte parsa XML");
+           return errArray;
+    }
+    
 }
