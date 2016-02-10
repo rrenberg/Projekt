@@ -53,6 +53,7 @@ public class ClientThread implements Runnable{
             while(aLive){
                 
                 respons = DIStream.readUTF();
+                myController.bounceTextMessage(respons, this);
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
                 System.out.println("Hänger sig här");
 

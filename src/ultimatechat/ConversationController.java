@@ -40,19 +40,22 @@ public class ConversationController {
         myUltimateChat = inUltimatechat;
     }
     
-    public void recieveTextMessage(String inName, Color inColor, String inText, ClientThread inClient){
-        System.out.println("Före i recieve");
-        chatview.addOthersText(inText, inColor, inName);
+    public void bounceTextMessage(String inXML,ClientThread inClient){
         for(ClientThread i:clients){
             if(i!=inClient){
                 try {
-                    i.getOutPutStream().writeUTF(myParser.sendText(inText,inName,inColor));
+                    i.getOutPutStream().writeUTF(inXML);
                 } catch (Exception ex) {
                     Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-        
+    }
+    
+    public void recieveTextMessage(String inName, Color inColor, String inText, ClientThread inClient){
+        System.out.println("Före i recieve");
+        chatview.addOthersText(inText, inColor, inName);
+
         System.out.println("Efter i recieve");
     }
     
