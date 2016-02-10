@@ -13,7 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -47,12 +50,17 @@ public class MainView extends JFrame {
             @Override
             public void windowClosing(WindowEvent e)
             {
-                for(ConversationController c: ultimateChat.conversationControllerList){
-                    c.killConversation();
+                try {
+                    for(ConversationController c: ultimateChat.conversationControllerList){
+                        c.killConversation();
+                    }
+                    ultimateChat.serverSocket.close();
+                    System.out.println("Closed");
+                    System.exit(0);
+                    //e.getWindow().dispose();
+                } catch (IOException ex) {
+                    Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("Closed");
-                System.exit(0);
-                //e.getWindow().dispose();
             }
         });
         

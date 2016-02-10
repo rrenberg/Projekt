@@ -110,7 +110,7 @@ public class ConversationController {
         for(ClientThread i: clients){
             
             try {
-                i.getOutPutStream().writeUTF(myParser.sendText(name, "Loggar ut", Color.RED));
+                i.getOutPutStream().writeUTF(myParser.disconnectXML(name,Color.RED));
                 i.killClientThread();
                 //clients.remove(i);
                //myUltimateChat.conversationControllerList.remove(this);

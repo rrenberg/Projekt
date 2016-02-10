@@ -82,12 +82,16 @@ public class XMLParser {
             String message = eElement.getTextContent();
             NodeList nList2 = nNode.getChildNodes();
             System.out.println(nNode.getTextContent());
+            boolean disconnect = false;
             for(int i =0; i<nList2.getLength();i++){
                 Node n2 = nList2.item(i);
                if (n2.getNodeType() == Node.ELEMENT_NODE) {
                Element e = (Element) n2;
                 //Element e = (Element) n2;
                 if(!e.getTagName().equals("fetstil") && !e.getTagName().equals("kursiv")){
+                    if(e.getTagName().equals("disconnect")){
+                        disconnect = true;
+                    }
                     System.out.println(e.getTagName());
                     nNode.removeChild(n2);
                 }
@@ -99,6 +103,10 @@ public class XMLParser {
             inFormation.add(eElement.getAttribute("color"));
 
             inFormation.add(unrewriteTags(nNode.getTextContent()));
+            if(disconnect){
+                inFormation.add("1");
+            }
+            
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
             //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
@@ -127,6 +135,12 @@ public class XMLParser {
         return newString.replace("&lt;", ">");
     }
     
+    public String disconnectXML(String inName, Color incolor){
+        return "<message sender=\""+rewriteTags(inName)+"\">"+"<text color=\"#"+
+                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+"<disconnect/>"+
+                "</text></message>";
+    }
+    
     private ArrayList<String> invalidXML(ArrayList<String> inFormation){
         ArrayList<String> errArray = new ArrayList<>();
            if(inFormation.size()!=0){
@@ -138,5 +152,6 @@ public class XMLParser {
            errArray.add("Kunde inte parsa XML");
            return errArray;
     }
+    
     
 }

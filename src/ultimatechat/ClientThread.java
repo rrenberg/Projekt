@@ -56,8 +56,13 @@ public class ClientThread implements Runnable{
                 myController.bounceTextMessage(respons, this);
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
                 System.out.println("Hänger sig här");
-
-                myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), infoTextMessage.get(2), this);
+                
+                if(infoTextMessage.size()==3){
+                    myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), infoTextMessage.get(2), this);
+                }else{
+                    myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), "Loggar Ut!", this);
+                    killClientThread();
+                }
                 
                 System.out.println("hänger sig efter");
            
