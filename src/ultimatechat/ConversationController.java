@@ -77,6 +77,7 @@ public class ConversationController {
         for(ClientThread i:clients){
 
             try {
+                System.out.println(clients.size());
                 i.getOutPutStream().writeUTF(myParser.sendText(inText,name,color));
             } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,8 +111,9 @@ public class ConversationController {
         for(ClientThread i: clients){
             
             try {
+                System.out.println("asdasaaa "+ myParser.disconnectXML(name,Color.RED));
                 i.getOutPutStream().writeUTF(myParser.disconnectXML(name,Color.RED));
-                i.killClientThread();
+                i.killClientThread(false);
                 //clients.remove(i);
                //myUltimateChat.conversationControllerList.remove(this);
             } catch (Exception ex) {

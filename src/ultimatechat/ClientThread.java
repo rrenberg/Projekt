@@ -63,7 +63,7 @@ public class ClientThread implements Runnable{
                     System.out.println("asdasd");
                 }else{
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), "Loggar Ut!", this);
-                    killClientThread();
+                    killClientThread(true);
                 }
                 
                 System.out.println("hänger sig efter");
@@ -81,13 +81,15 @@ public class ClientThread implements Runnable{
         System.out.println("Trådens sista");
     }
     
-    public void killClientThread(){
+    public void killClientThread(boolean iDisconnect){
         try {
             aLive = false;
             DIStream.close();
             DOStream.close();
             System.out.println("killClientThread: "+myController.getClients().size());
-            //myController.getClients().remove(this);
+            if(iDisconnect){
+                myController.getClients().remove(this);
+            }
             System.out.println("killClientThread: "+myController.getClients().size());
             
             

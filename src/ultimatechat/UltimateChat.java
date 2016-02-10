@@ -49,6 +49,9 @@ public class UltimateChat implements Runnable {
         mainView = new MainView(this);
         createDialogForNameAndPort();
         xmlParser = new XMLParser();
+        System.out.println("ooooo:" +xmlParser.unParseXML("<message sender=\""+"Rasmus"+"\">"+"<text color=\"#"+
+                Integer.toHexString(Color.red.getRGB()).substring(2)+"\" ostsort=\"cheddar\">"+"<disconnect/><kursiv> ajskhd </kursiv> ,jashdlhaksd <fetstill> ajskhd </fetstill> jag är en apa"+
+                "</text></message>").size());
         conversationControllerList = new ArrayList<ConversationController>();
         createNewConversationController();
         mainView.addConversation();
@@ -119,7 +122,7 @@ public class UltimateChat implements Runnable {
                 
                 System.out.println("Inne i loopen");
             }catch(Exception ex){
-                
+                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             

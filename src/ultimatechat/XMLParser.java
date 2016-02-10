@@ -62,7 +62,7 @@ public class XMLParser {
     }
     
     public ArrayList unParseXML(String inXML){
-        
+        System.out.println("asd: "+inXML);
         ArrayList<String> inFormation = new ArrayList<>();
         
         try {
@@ -91,6 +91,7 @@ public class XMLParser {
                 if(!e.getTagName().equals("fetstil") && !e.getTagName().equals("kursiv")){
                     if(e.getTagName().equals("disconnect")){
                         disconnect = true;
+                        System.out.print("diss true");
                     }
                     System.out.println(e.getTagName());
                     nNode.removeChild(n2);
@@ -105,6 +106,7 @@ public class XMLParser {
             inFormation.add(unrewriteTags(nNode.getTextContent()));
             if(disconnect){
                 inFormation.add("1");
+                System.out.print("diss true 2");
             }
             
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
