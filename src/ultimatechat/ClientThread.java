@@ -55,10 +55,12 @@ public class ClientThread implements Runnable{
                 respons = DIStream.readUTF();
                 myController.bounceTextMessage(respons, this);
                 ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
-                System.out.println("Hänger sig här");
+                System.out.println("aksldjaösdmad.amsmasdmladslmkklmad");
+                System.out.println(infoTextMessage.size());
                 
                 if(infoTextMessage.size()==3){
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), infoTextMessage.get(2), this);
+                    System.out.println("asdasd");
                 }else{
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), "Loggar Ut!", this);
                     killClientThread();
@@ -84,6 +86,10 @@ public class ClientThread implements Runnable{
             aLive = false;
             DIStream.close();
             DOStream.close();
+            System.out.println("killClientThread: "+myController.getClients().size());
+            //myController.getClients().remove(this);
+            System.out.println("killClientThread: "+myController.getClients().size());
+            
             
             
         } catch (Exception ex) {
