@@ -50,6 +50,22 @@ public class XMLParser {
         return DBuilder.parse(is).getDocumentElement().getTextContent();
     }
     
+    public boolean checkIfRequest(String inXML) throws Exception{
+        Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
+        NodeList nList = doc.getElementsByTagName("message");
+        boolean request = false;
+        for(int i =0; i<nList.getLength();i++){
+                   Node n2 = nList.item(i);
+                   if (n2.getNodeType() == Node.ELEMENT_NODE) {
+                   Element e = (Element) n2;
+                   if(e.getTagName().equals("request")){
+                       request = true;
+                   }
+                   }
+        }
+        return request;
+    }
+    
     public String sendrequestToXML(String inText, String inName){
         return "<message sender=\""+rewriteTags(inName)+"\">"+"<request>"+rewriteTags(inText)+"</request></message>";
     }
@@ -82,7 +98,7 @@ public class XMLParser {
                 }
                 NodeList nList = doc.getElementsByTagName("text");
                 Node nNode = nList.item(0);
-                NodeList n = nNode.getChildNodes();
+                ;
 
                 Element eElement = (Element) nNode;
                 String message = eElement.getTextContent();

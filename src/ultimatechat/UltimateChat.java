@@ -105,9 +105,11 @@ public class UltimateChat implements Runnable {
                 
                 System.out.println("Respons är:");
                 System.out.println(inStream.ready());
+                Thread thread = new Thread(new StartUpThread(inStream, outStream,this));
+                thread.start();
                 //System.out.println(inStream.readLine());
                 
-                respons.append(inStream.readLine());
+              /*  respons.append(inStream.readLine());
                 
                 while(inStream.ready()){
                     if(respons.length()!=0){
@@ -154,7 +156,7 @@ public class UltimateChat implements Runnable {
 
                     System.out.println("Inne i loopen");
                     respons =new StringBuilder();
-                    }
+                    }*/
             }catch(Exception ex){
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             }
