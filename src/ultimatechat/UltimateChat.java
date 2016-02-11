@@ -44,14 +44,16 @@ public class UltimateChat implements Runnable {
     String name;
     ServerSocket serverSocket;
     XMLParser xmlParser;
+    CreateDialogForConnectionRequest C;
+    boolean server=true;
     
     public UltimateChat() {
         mainView = new MainView(this);
         createDialogForNameAndPort();
         xmlParser = new XMLParser();
-        System.out.println("ooooo:" +xmlParser.unParseXML("<message sender=\""+"Rasmus"+"\">"+"<text color=\"#"+
-                Integer.toHexString(Color.red.getRGB()).substring(2)+"\" ostsort=\"cheddar\">"+"<disconnect/><kursiv> ajskhd </kursiv> ,jashdlhaksd <fetstill> ajskhd </fetstill> jag är en apa"+
-                "</text></message>").size());
+        //System.out.println("ooooo:" +xmlParser.unParseXML("<message sender=\""+"Rasmus"+"\">"+"<text color=\"#"+
+        //        Integer.toHexString(Color.red.getRGB()).substring(2)+"\" ostsort=\"cheddar\">"+"<disconnect/><kursiv> ajskhd </kursiv> ,jashdlhaksd <fetstill> ajskhd </fetstill> jag är en apa"+
+        //        "</text></message>").size());
         conversationControllerList = new ArrayList<ConversationController>();
         createNewConversationController();
         mainView.addConversation();
@@ -91,36 +93,68 @@ public class UltimateChat implements Runnable {
 	    System.out.println("Could not listen on port: 4444");
 	    System.exit(-1);
         }
-            
-        while(true){
+        
+        StringBuilder respons =new StringBuilder();
+        while(server){
             Socket clientsocket = null;
             try{
                 System.out.println("Lyssnar nu");
                 clientsocket = serverSocket.accept();
-                DataInputStream inStream = new DataInputStream(clientsocket.getInputStream());
-                DataOutputStream outStream = new DataOutputStream(clientsocket.getOutputStream());
+                BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
+                PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(), true);
                 
-               
-                String stringMessage = inStream.readUTF();
+                System.out.println("Respons är:");
+                System.out.println(inStream.ready());
+                //System.out.println(inStream.readLine());
                 
-                //createDialogForNameAndPort();
-                CreateDialogForConnectionRequest C= new CreateDialogForConnectionRequest(xmlParser.requestParser(stringMessage), conversationControllerList, mainView);
-                ArrayList answer= C.createDialogForConnectionRequestPopup();
+                respons.append(inStream.readLine());
                 
-                if((int)answer.get(0) == 0){
-                    if((int) answer.get(1)==0){
-                       createNewConversationController();
-                       conversationControllerList.get(conversationControllerList.size()-1).addClient(outStream,inStream);
-                      
-                       mainView.addConversation();
-                    }else{
-                       conversationControllerList.get((int)answer.get(1)-1).addClient(outStream,inStream);
+                while(inStream.ready()){
+                    if(respons.length()!=0){
+                        respons.append("\n");
                     }
-                }else if ((int)answer.get(0)==2){
-                    
+                
+                    respons.append(inStream.readLine());
+                    if(inStream.ready()){
+                        respons.append("\n");
+                        respons.append(inStream.readLine());
+
+                    }
                 }
                 
-                System.out.println("Inne i loopen");
+                System.out.println("Respons:"+respons.toString());
+                System.out.println(respons.toString().length()==0);
+                //String stringMessage = inStream.readLine();
+                
+                //createDialogForNameAndPort();
+                if(!inStream.ready() && !respons.toString().equals("null")){
+                   
+                    if(respons.toString().length()==0){
+                         C= new CreateDialogForConnectionRequest("E-klient vill ansluta", conversationControllerList, mainView);
+                    }else{
+                         C= new CreateDialogForConnectionRequest(xmlParser.requestParser(respons.toString()), conversationControllerList, mainView);
+                    }
+                    System.out.println(respons.toString());
+                    System.out.println(respons.toString().length());
+                    //CreateDialogForConnectionRequest C= new CreateDialogForConnectionRequest(xmlParser.requestParser(respons.toString()), conversationControllerList, mainView);
+                    ArrayList answer= C.createDialogForConnectionRequestPopup();
+
+                    if((int)answer.get(0) == 0){
+                        if((int) answer.get(1)==0){
+                           createNewConversationController();
+                           conversationControllerList.get(conversationControllerList.size()-1).addClient(outStream,inStream);
+
+                           mainView.addConversation();
+                        }else{
+                           conversationControllerList.get((int)answer.get(1)-1).addClient(outStream,inStream);
+                        }
+                    }else if ((int)answer.get(0)==2){
+
+                    }
+
+                    System.out.println("Inne i loopen");
+                    respons =new StringBuilder();
+                    }
             }catch(Exception ex){
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -175,5 +209,9 @@ public class UltimateChat implements Runnable {
     
     public ArrayList getConvControllerList(){
         return conversationControllerList;
+    }
+    
+    public void setServer(boolean inBoolean){
+        server=inBoolean;
     }
 }

@@ -44,7 +44,7 @@ public class ConversationController {
         for(ClientThread i:clients){
             if(i!=inClient){
                 try {
-                    i.getOutPutStream().writeUTF(inXML);
+                    i.getOutPutStream().println(inXML);
                 } catch (Exception ex) {
                     Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -59,14 +59,14 @@ public class ConversationController {
         System.out.println("Efter i recieve");
     }
     
-    public void addClient(DataOutputStream inOutStream, DataInputStream inInStream){
+    public void addClient(PrintWriter inOutStream, BufferedReader inInStream){
         clients.add(new ClientThread(inInStream, inOutStream, myParser, this));
     }
     
     public void sendConnectionRequest(String inText){
        
         try {
-            clients.get(clients.size()-1).getOutPutStream().writeUTF(myParser.sendrequestToXML(inText));
+            clients.get(clients.size()-1).getOutPutStream().println(myParser.sendrequestToXML(inText,name));
         } catch (Exception ex) {
             Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -78,7 +78,7 @@ public class ConversationController {
 
             try {
                 System.out.println(clients.size());
-                i.getOutPutStream().writeUTF(myParser.sendText(inText,name,color));
+                i.getOutPutStream().println(myParser.sendText(inText,name,color));
             } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -112,7 +112,8 @@ public class ConversationController {
             
             try {
                 System.out.println("asdasaaa "+ myParser.disconnectXML(name,Color.RED));
-                i.getOutPutStream().writeUTF(myParser.disconnectXML(name,Color.RED));
+                i.getOutPutStream().println(myParser.disconnectXML(name,Color.RED));
+                System.out.println("Kickar client:"+i);
                 i.killClientThread(false);
                 //clients.remove(i);
                //myUltimateChat.conversationControllerList.remove(this);

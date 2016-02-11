@@ -21,15 +21,15 @@ import java.util.logging.Logger;
  */
 public class ClientThread implements Runnable{
     
-    private DataInputStream DIStream;
-    private DataOutputStream DOStream;
+    private BufferedReader DIStream;
+    private PrintWriter DOStream;
     private XMLParser myXMLParser;
     private ConversationController myController;
     private Boolean aLive;
     
     
     
-    public ClientThread(DataInputStream inPutStream, DataOutputStream outPutStream, XMLParser inXMLParser, ConversationController inController){
+    public ClientThread(BufferedReader inPutStream, PrintWriter outPutStream, XMLParser inXMLParser, ConversationController inController){
         DIStream = inPutStream;
         DOStream = outPutStream;
         myXMLParser = inXMLParser;
@@ -41,20 +41,51 @@ public class ClientThread implements Runnable{
         t.start();
     }
     
-    public DataOutputStream getOutPutStream(){
+    public PrintWriter getOutPutStream(){
         return DOStream;
+    }
+    
+    private ArrayList<String> waitforReply(String inRespons){
+        
+        try {
+            
+           
+            return myXMLParser.unParseXML(inRespons);
+        
+           
+        } catch (Exception ex) {
+            Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+            ArrayList<String> errArray = new ArrayList<>();
+           
+                   errArray.add("Okänd");
+           
+           errArray.add("#"+
+                Integer.toHexString(Color.RED.getRGB()).substring(2));
+           errArray.add("Kunde inte parsa XML");
+           return errArray;
+        }
     }
 
     @Override
     public void run() {
         System.out.println("Inne i client run");
-        String respons;
+        StringBuilder respons =new StringBuilder();
         try {
             while(aLive){
+                if(respons.length()!=0){
+                    respons.append("\n");
+                }
+                respons.append(DIStream.readLine());
+                if(DIStream.ready()){
+                    respons.append("\n");
+                    respons.append(DIStream.readLine());
+                    
+                }
                 
-                respons = DIStream.readUTF();
-                myController.bounceTextMessage(respons, this);
-                ArrayList<String> infoTextMessage = myXMLParser.unParseXML(respons);
+                //respons = DIStream.readLine();
+                if(!DIStream.ready()){
+                myController.bounceTextMessage(respons.toString(), this);
+                ArrayList<String> infoTextMessage = waitforReply(respons.toString());                                        //myXMLParser.unParseXML(respons.toString());
                 System.out.println("aksldjaösdmad.amsmasdmladslmkklmad");
                 System.out.println(infoTextMessage.size());
                 
@@ -65,14 +96,15 @@ public class ClientThread implements Runnable{
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), "Loggar Ut!", this);
                     killClientThread(true);
                 }
-                
+                respons =new StringBuilder();
                 System.out.println("hänger sig efter");
-           
+                }
             }
         } catch (Exception ex) {
             try {
                 DIStream.close();
                 DOStream.close();
+                System.out.println("Stänger strömmarna");
                 //myController.getClients().remove(this);
             } catch (IOException ex1) {
                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex1);

@@ -55,6 +55,7 @@ public class MainView extends JFrame {
                         c.killConversation();
                     }
                     ultimateChat.serverSocket.close();
+                    ultimateChat.setServer(false);
                     System.out.println("Closed");
                     System.exit(0);
                     //e.getWindow().dispose();

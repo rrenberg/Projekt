@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  *
@@ -44,12 +45,13 @@ public class XMLParser {
     }
     
     public String requestParser (String inText) throws Exception{
+        System.out.println("Inne i requesPars:"+inText);
         InputSource is = new InputSource(new StringReader(inText));
         return DBuilder.parse(is).getDocumentElement().getTextContent();
     }
     
-    public String sendrequestToXML(String inText){
-        return "<message><request>"+rewriteTags(inText)+"</request></message>";
+    public String sendrequestToXML(String inText, String inName){
+        return "<message sender=\""+rewriteTags(inName)+"\">"+"<request>"+rewriteTags(inText)+"</request></message>";
     }
     
     public String sendText(String inText, String inName, Color incolor){
@@ -61,71 +63,70 @@ public class XMLParser {
                 "</text></message>";
     }
     
-    public ArrayList unParseXML(String inXML){
+    public ArrayList unParseXML(String inXML) throws Exception{
         System.out.println("asd: "+inXML);
+        
         ArrayList<String> inFormation = new ArrayList<>();
         
-        try {
-            Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
-            
-           // doc.setTextContent(unrewriteTags(doc.getTextContent()));
-            //doc.getDocumentElement().normalize();
-            inFormation.add(((Element) (doc.getElementsByTagName("message").item(0))).getAttribute("sender"));
-            if(inFormation.get(0).length()==0){
-                throw new NullPointerException();
-            }
-            NodeList nList = doc.getElementsByTagName("text");
-            Node nNode = nList.item(0);
-            NodeList n = nNode.getChildNodes();
-            
-            Element eElement = (Element) nNode;
-            String message = eElement.getTextContent();
-            NodeList nList2 = nNode.getChildNodes();
-            System.out.println(nNode.getTextContent());
-            boolean disconnect = false;
-            for(int i =0; i<nList2.getLength();i++){
-                Node n2 = nList2.item(i);
-               if (n2.getNodeType() == Node.ELEMENT_NODE) {
-               Element e = (Element) n2;
-                //Element e = (Element) n2;
-                if(!e.getTagName().equals("fetstil") && !e.getTagName().equals("kursiv")){
-                    if(e.getTagName().equals("disconnect")){
-                        disconnect = true;
-                        System.out.print("diss true");
-                    }
-                    System.out.println(e.getTagName());
-                    nNode.removeChild(n2);
-                }
-                
-            }
-            }
-//            eElement.getElementsByTagName("fetstil").item(0).getTextContent();
-            System.out.println(eElement.getAttribute("color"));
-            inFormation.add(eElement.getAttribute("color"));
+        //try {
+            if(!inXML.equals("null")){
+                System.out.println(inXML.equals("null"));
+                System.out.println("asd2: "+inXML);
+                Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
 
-            inFormation.add(unrewriteTags(nNode.getTextContent()));
-            if(disconnect){
-                inFormation.add("1");
-                System.out.print("diss true 2");
-            }
-            
+               // doc.setTextContent(unrewriteTags(doc.getTextContent()));
+                //doc.getDocumentElement().normalize();
+                inFormation.add(((Element) (doc.getElementsByTagName("message").item(0))).getAttribute("sender"));
+                if(inFormation.get(0).length()==0){
+                    throw new NullPointerException();
+                }
+                NodeList nList = doc.getElementsByTagName("text");
+                Node nNode = nList.item(0);
+                NodeList n = nNode.getChildNodes();
+
+                Element eElement = (Element) nNode;
+                String message = eElement.getTextContent();
+                NodeList nList2 = nNode.getChildNodes();
+                System.out.println(nNode.getTextContent());
+                boolean disconnect = false;
+                for(int i =0; i<nList2.getLength();i++){
+                    Node n2 = nList2.item(i);
+                   if (n2.getNodeType() == Node.ELEMENT_NODE) {
+                   Element e = (Element) n2;
+                    //Element e = (Element) n2;
+                    if(!e.getTagName().equals("fetstil") && !e.getTagName().equals("kursiv")){
+                        if(e.getTagName().equals("disconnect")){
+                            disconnect = true;
+                            System.out.print("diss true");
+                        }
+                        System.out.println(e.getTagName());
+                        nNode.removeChild(n2);
+                    }
+
+                }
+                }
+    //            eElement.getElementsByTagName("fetstil").item(0).getTextContent();
+                System.out.println(eElement.getAttribute("color"));
+                inFormation.add(eElement.getAttribute("color"));
+
+                inFormation.add(unrewriteTags(nNode.getTextContent()));
+                if(disconnect){
+                    inFormation.add("1");
+                    System.out.print("diss true 2");
+                }
+
             //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
             //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
             //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
-        
-        } catch (SAXException ex) {
-           Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
-           
-           return invalidXML(inFormation);
-        } catch (IOException ex) {
-            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
-            return invalidXML(inFormation);
-        } catch (NullPointerException exp){
-            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, exp);
-            return invalidXML(inFormation);
-        }
+            }
+       // } catch (Exception ex) {
+           //Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+           System.out.println(invalidXML(inFormation));
+           //return invalidXML(inFormation);
+        //}
         
         return inFormation;
+        
     }
     public String rewriteTags(String inText){
         String newString = inText.replace(">", "&gt;");
