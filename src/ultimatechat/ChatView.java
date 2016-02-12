@@ -156,6 +156,8 @@ public class ChatView extends JPanel implements ActionListener {
         clientPanel = new JPanel(new GridLayout(3,0));
         clientPanel.add((new JLabel("Kick Client: ")));
         clientDropDown = new JComboBox();
+        clientDropDown.addItem(".......");
+        clientArrayList.add(null);
         //clientDropDown.addActionListener(this);
         clientPanel.add(clientDropDown);
         kickClient = new JButton("Kick");
@@ -303,8 +305,9 @@ public class ChatView extends JPanel implements ActionListener {
         }
     }
     
-    
+
     public void removeFromClient(ClientThread ct){
+
         clientDropDown.removeItem(ct.getClientName());
         clientArrayList.remove(ct);
         System.out.println("removeFromClient 1");
@@ -312,7 +315,17 @@ public class ChatView extends JPanel implements ActionListener {
         System.out.println("removeFromClient 2");
         System.out.println("removeFromClient");
     }
-
+    
+    public ArrayList<ClientThread> getClientList(){
+        return clientArrayList;
+    }
+    
+    public JComboBox getDropDown(){
+        return clientDropDown;
+    }
+    
+    
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==connectButton){

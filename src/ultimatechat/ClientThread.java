@@ -102,6 +102,7 @@ public class ClientThread implements Runnable{
                 }else{
                     clientName =infoTextMessage.get(0);
                     myController.chatview.setNameToClient(this);
+                    myController.chatview.removeFromClient(this);
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), "Loggar Ut!", this);
                     killClientThread(true);
                 }
@@ -110,7 +111,7 @@ public class ClientThread implements Runnable{
                 }
             }
         } catch (Exception ex) {
-            
+            Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
             try {
                 DIStream.close();
                 DOStream.close();
