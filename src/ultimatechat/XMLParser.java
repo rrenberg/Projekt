@@ -53,16 +53,20 @@ public class XMLParser {
     public boolean checkIfRequest(String inXML) throws Exception{
         Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
         NodeList nList = doc.getElementsByTagName("message");
+        Node nNode = nList.item(0);
+        NodeList nList2 = nNode.getChildNodes();
         boolean request = false;
-        for(int i =0; i<nList.getLength();i++){
-                   Node n2 = nList.item(i);
+        for(int i =0; i<nList2.getLength();i++){
+                   Node n2 = nList2.item(i);
                    if (n2.getNodeType() == Node.ELEMENT_NODE) {
-                   Element e = (Element) n2;
-                   if(e.getTagName().equals("request")){
-                       request = true;
-                   }
+                        Element e = (Element) n2;
+                        System.out.println(e.getTagName());
+                        if(e.getTagName().equals("request")){
+                            request = true;
+                        }
                    }
         }
+        System.out.println("checkRequest:"+request);
         return request;
     }
     

@@ -40,7 +40,9 @@ public class MainView extends JFrame {
         super("UltimateChat");
         ultimateChat=inultimateChat;
         //Set frame settings
-        setPreferredSize(new Dimension(1000, 1000));
+        setPreferredSize(new Dimension(1100, 800));
+        setMinimumSize(new Dimension(1100, 800));
+        
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

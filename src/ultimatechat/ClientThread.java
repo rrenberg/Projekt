@@ -115,9 +115,12 @@ public class ClientThread implements Runnable{
     
     public void killClientThread(boolean iDisconnect){
         try {
+            System.out.println("Inne i kilClient");
             aLive = false;
-            DIStream.close();
-            DOStream.close();
+            System.out.println("Ovan inStream");
+            DOStream.close();//DIStream.close();
+            System.out.println("Ovan outStream");
+            DIStream.close();//DOStream.close();
             System.out.println("killClientThread: "+myController.getClients().size());
             if(iDisconnect){
                 myController.getClients().remove(this);

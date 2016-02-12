@@ -50,9 +50,12 @@ public class ChatView extends JPanel implements ActionListener {
     //private String[] myText = new String[25];
     //private String[] othersText = new String[25];
     private JPanel chatPanel;
+    private JPanel clientPanel;
+    private JComboBox clientDropDown;
+    private JButton kickClient;
     
     public ChatView(ConversationController inController){
-        
+        this.setBackground(Color.WHITE);
         //Sätter text arrayerna
         //for(Integer i=0; i < myText.length;i++){
         //    myText[i] = "\n";
@@ -64,12 +67,13 @@ public class ChatView extends JPanel implements ActionListener {
   
         //Sätter alla fält
         controller = inController;
-        sendTextArea = new JTextArea("<Wirte your message here>",5,40);
+        sendTextArea = new JTextArea("<Write your message here>",5,72);
         showTextAreayou = new JTextArea(25,40);
         //showTextAreaothers = new JTextArea(25,40);
         chatPanel = new JPanel(new BorderLayout());
         //chatPanel.setLayout(new BoxLayout(chatPanel,BoxLayout.Y_AXIS));
         showTextArea = new JScrollPane(chatPanel);
+        chatPanel.setAutoscrolls(true);
         
        
         myText = new JTextPane();
@@ -83,6 +87,7 @@ public class ChatView extends JPanel implements ActionListener {
         sendTextButton.addActionListener(this);
         
         selectEncryption = new JComboBox();
+        
         selectColor = new JButton("Color");
         selectColor.addActionListener(this);
         
@@ -102,11 +107,14 @@ public class ChatView extends JPanel implements ActionListener {
         showTextArea.setPreferredSize(new Dimension(950,500));
         //showTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         sendTextArea.setLineWrap(true);
+        
+        
         //showTextAreayou.setLineWrap(true);
         //showTextAreaothers.setLineWrap(true);
         
         
-        JPanel sendtextPanel = new JPanel();
+        JPanel sendtextPanel = new JPanel(new BorderLayout());
+        
         JPanel underButtonsPanel = new JPanel();
         JPanel ButtonPanel = new JPanel();
         
@@ -124,10 +132,15 @@ public class ChatView extends JPanel implements ActionListener {
         c.gridwidth = 10;
         c.gridheight = 10;
         c.weightx = 1;
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.anchor = GridBagConstraints.NORTHWEST;
         this.add(showTextArea,c);
+        //sendTextArea.set
+        sendtextPanel.add(sendTextArea,BorderLayout.LINE_START);
+        sendtextPanel.setBackground(Color.WHITE);
         
-        sendtextPanel.add(sendTextArea);
+        //sendtextPanel.setP
+        JScrollPane scrollSendText = new JScrollPane();
+        scrollSendText.setViewportView(sendtextPanel);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -136,15 +149,27 @@ public class ChatView extends JPanel implements ActionListener {
         c.gridheight = 4;
         c.weightx = 1;
         c.anchor = GridBagConstraints.LINE_START;
-        this.add(sendTextArea,c);
+        this.add(scrollSendText,c);
+        
+        clientPanel = new JPanel(new GridLayout(3,0));
+        clientPanel.add((new JLabel("Kick Client: ")));
+        clientDropDown = new JComboBox();
+        //clientDropDown.addActionListener(this);
+        clientPanel.add(clientDropDown);
+        kickClient = new JButton("Kick");
+        kickClient.addActionListener(this);
+        clientPanel.add(kickClient);
         
         
-        ButtonPanel.setLayout(new GridLayout(3,1,5,0));
-        ButtonPanel.add(sendTextButton);
-        ButtonPanel.add(sendFileButton);
-        ButtonPanel.add(connectButton);
+        c.fill = GridBagConstraints.VERTICAL;
+        c.gridx = 10;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.weightx = 1;
+        this.add(clientPanel,c);
         
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 9;
         c.gridy = 13;
         c.gridwidth = 1;
@@ -152,7 +177,7 @@ public class ChatView extends JPanel implements ActionListener {
         c.weightx = 1;
         this.add(sendTextButton,c);
         
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 9;
         c.gridy = 14;
         c.gridwidth = 1;
@@ -168,18 +193,18 @@ public class ChatView extends JPanel implements ActionListener {
         c.weightx = 1;
         this.add(connectButton,c);
         
-        underButtonsPanel.setLayout(new GridLayout(1,2,0,5));
+        //underButtonsPanel.setLayout(new GridLayout(1,2,0,5));
         //underButtonsPanel.setPreferredSize(new Dimension(400,30));
-        underButtonsPanel.add(selectEncryption);
-        underButtonsPanel.add(selectColor);
+       // underButtonsPanel.add(selectEncryption);
+       // underButtonsPanel.add(selectColor);
         
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 0;
         c.gridy = 18;
         c.gridwidth = 1;
         this.add(selectColor,c);
         
-        c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.VERTICAL;
         c.gridx = 2;
         c.gridy = 18;
         c.gridwidth = 1;
@@ -231,6 +256,8 @@ public class ChatView extends JPanel implements ActionListener {
         }
        
         showTextArea.setViewportView(chatPanel);
+        JScrollBar scrollbar = showTextArea.getVerticalScrollBar();
+        scrollbar.setValue(scrollbar.getMaximum());
     }
     
     public void addOthersText(String inoText, Color inColor, String inName){
@@ -245,7 +272,20 @@ public class ChatView extends JPanel implements ActionListener {
         }catch(BadLocationException e){
             
         }
+        JScrollBar scrollbar = showTextArea.getVerticalScrollBar();
+        scrollbar.setValue(scrollbar.getMaximum());
 
+    }
+    
+    public void addToClient(ClientThread ct){
+        clientDropDown.addItem(ct);
+    }
+    public void removeFromClient(ClientThread ct){
+        clientDropDown.removeItem(ct);
+        System.out.println("removeFromClient 1");
+        
+        System.out.println("removeFromClient 2");
+        System.out.println("removeFromClient");
     }
 
     @Override
@@ -289,6 +329,21 @@ public class ChatView extends JPanel implements ActionListener {
             CreateDialogForConnectionRequest C = new CreateDialogForConnectionRequest("Hej", controller.getUltimateChat().getConvControllerList(), controller.getUltimateChat().mainView);
             ArrayList answer= C.createDialogForConnectionRequestPopup();
         }
+        if(e.getSource()==kickClient){
+            System.out.println("Kick Button 1");
+            System.out.println(clientDropDown.getSelectedItem());
+            if(clientDropDown.getSelectedItem()!=null){
+            System.out.println(clientDropDown.getSelectedItem());
+            ClientThread ct = (ClientThread) clientDropDown.getSelectedItem();
+            controller.killClient(ct);
+            //controller.killConversation();
+           // ct.killClientThread(false);
+            removeFromClient(ct);
+            }
+            System.out.println("Kick Button");
+            
+        }
+        
     }
     
 }

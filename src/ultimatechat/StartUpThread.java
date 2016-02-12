@@ -5,6 +5,7 @@
  */
 package ultimatechat;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -81,7 +82,17 @@ public class StartUpThread implements Runnable {
                             ultimateChat.conversationControllerList.get((int) answer.get(1) - 1).addClient(outStream, inStream);
                         }
                     } else if ((int) answer.get(0) == 2) {
-
+                        if (respons.toString().length() == 0 || !ultimateChat.xmlParser.checkIfRequest(respons.toString())) {
+                            outStream.println(ultimateChat.xmlParser.sendText("Connection denied",ultimateChat.name,Color.RED));
+                            outStream.println(ultimateChat.xmlParser.disconnectXML(ultimateChat.name,Color.RED));
+                            inStream.close();
+                            outStream.close();
+                        } else {
+                            outStream.println(ultimateChat.xmlParser.sendText("Connection denied",ultimateChat.name,Color.RED));
+                            outStream.println(ultimateChat.xmlParser.disconnectXML(ultimateChat.name,Color.RED));
+                            inStream.close();
+                            outStream.close();
+                        }   
                     }
 
                     System.out.println("Inne i loopen");

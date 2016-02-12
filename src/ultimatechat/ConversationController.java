@@ -102,7 +102,7 @@ public class ConversationController {
         color=inColor;
     }
     
-    public ArrayList getClients(){
+    public ArrayList<ClientThread> getClients(){
         return clients;
     }
     
@@ -123,6 +123,24 @@ public class ConversationController {
                 
             
         }
+    }
+    
+    public void killClient(ClientThread ct){
+        
+            
+            try {
+                System.out.println("asdasaaa "+ myParser.disconnectXML(name,Color.RED));
+                ct.getOutPutStream().println(myParser.disconnectXML(name,Color.RED));
+                System.out.println("Kickar client:"+ct);
+                ct.killClientThread(false);
+                //clients.remove(i);
+               //myUltimateChat.conversationControllerList.remove(this);
+            } catch (Exception ex) {
+                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+            
+        
     }
 
    
