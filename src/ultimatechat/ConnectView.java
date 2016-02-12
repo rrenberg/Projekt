@@ -6,6 +6,8 @@
 package ultimatechat;
 
 import java.awt.FlowLayout;
+import java.net.InetAddress;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,7 +22,7 @@ public class ConnectView
     private Integer port;
     private String address;
     private String textMessage;
-            
+    private boolean connectionOk = false;  
             
             
     public ConnectView(){
@@ -40,12 +42,28 @@ public class ConnectView
         dialogPanel.add(new JLabel("Message:"));
         dialogPanel.add(TextField);
         
-        JOptionPane.showConfirmDialog(null, dialogPanel,
+        int ans = JOptionPane.showConfirmDialog(null, dialogPanel,
                 "Connect", JOptionPane.CANCEL_OPTION);
-        port = Integer.valueOf(portTextField.getText());
-        address = addressTextField.getText();
-        textMessage = TextField.getText();
-        
+        if(ans==0){
+         try{
+                port = Integer.valueOf(portTextField.getText());
+                   
+                address = InetAddress.getByName(addressTextField.getText()).toString().substring(1);
+                System.out.println(InetAddress.getByName(addressTextField.getText()).toString());
+                textMessage = TextField.getText();
+                connectionOk = true;
+
+        }catch(Exception ex){
+                JFrame tempJF = new JFrame("Some Input was incorrect");
+                JOptionPane.showMessageDialog(tempJF, "Varning! Invalid input! ",
+                        "Invalid Input",
+                        JOptionPane.WARNING_MESSAGE);
+        }
+        }
+    }
+    
+    public boolean getConnectionOk(){
+        return connectionOk;
     }
     
     public int getPort(){

@@ -26,6 +26,7 @@ public class ClientThread implements Runnable{
     private XMLParser myXMLParser;
     private ConversationController myController;
     private Boolean aLive;
+    private String clientName = "Okänd";
     
     
     
@@ -43,6 +44,10 @@ public class ClientThread implements Runnable{
     
     public PrintWriter getOutPutStream(){
         return DOStream;
+    }
+    
+    public String getClientName(){
+        return clientName;
     }
     
     private ArrayList<String> waitforReply(String inRespons){
@@ -90,9 +95,13 @@ public class ClientThread implements Runnable{
                 System.out.println(infoTextMessage.size());
                 
                 if(infoTextMessage.size()==3){
+                    clientName =infoTextMessage.get(0);
+                    myController.chatview.setNameToClient(this);
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), infoTextMessage.get(2), this);
                     System.out.println("asdasd");
                 }else{
+                    clientName =infoTextMessage.get(0);
+                    myController.chatview.setNameToClient(this);
                     myController.recieveTextMessage(infoTextMessage.get(0), Color.decode(infoTextMessage.get(1)), "Loggar Ut!", this);
                     killClientThread(true);
                 }
@@ -101,6 +110,7 @@ public class ClientThread implements Runnable{
                 }
             }
         } catch (Exception ex) {
+            
             try {
                 DIStream.close();
                 DOStream.close();

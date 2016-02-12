@@ -186,9 +186,28 @@ public class UltimateChat implements Runnable {
                 "Please enter your name and port", JOptionPane.DEFAULT_OPTION);
         
         //Set name and port
-        name = nameTextField.getText();
-        port = Integer.valueOf(portTextField.getText());
+        if(nameTextField.getText().equals("")){
+            name = "UnNamed";
+        }else{
+            name = nameTextField.getText();
+        }
         
+        try{
+            if(portTextField.getText() == null){
+                port = 4000;
+            }else{
+
+                port = Integer.valueOf(portTextField.getText());
+
+            }
+        
+        }catch(Exception ex){
+                port = 4000;
+                JFrame tempJF = new JFrame("Bad Port");
+                JOptionPane.showMessageDialog(tempJF, "Varning! Invalid port choosen, you get port 4000 ",
+                        "Bad Port",
+                        JOptionPane.WARNING_MESSAGE);
+        }finally{
         //Add to name and port to MainView
         JPanel upperPanel = new JPanel();
         try {
@@ -203,6 +222,7 @@ public class UltimateChat implements Runnable {
         
         mainView.add(upperPanel,BorderLayout.NORTH);
         mainView.show();
+    }
     }
     
     public ConversationController getConvController(){

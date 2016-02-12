@@ -54,6 +54,8 @@ public class ChatView extends JPanel implements ActionListener {
     private JComboBox clientDropDown;
     private JButton kickClient;
     
+    private ArrayList<ClientThread> clientArrayList = new ArrayList<>();
+    
     public ChatView(ConversationController inController){
         this.setBackground(Color.WHITE);
         //Sätter text arrayerna
@@ -278,10 +280,33 @@ public class ChatView extends JPanel implements ActionListener {
     }
     
     public void addToClient(ClientThread ct){
-        clientDropDown.addItem(ct);
+        clientDropDown.addItem(ct.getClientName());
+        clientArrayList.add(ct);
     }
+    
+    public void setNameToClient(ClientThread ct){
+        for(int i=0; i<clientArrayList.size();i++){
+            if(ct == clientArrayList.get(i)){
+                System.out.println(i);
+                System.out.println(clientDropDown.getItemAt(i));
+                
+                System.out.println(ct.getClientName());
+                clientDropDown.addItem(ct.getClientName());
+                clientDropDown.removeItem(clientDropDown.getItemAt(i));
+                
+                ClientThread clientToBeMoved = clientArrayList.get(i);
+                System.out.println(clientToBeMoved.getClientName());
+                clientArrayList.remove(i);
+                clientArrayList.add(clientToBeMoved);
+                
+            }
+        }
+    }
+    
+    
     public void removeFromClient(ClientThread ct){
-        clientDropDown.removeItem(ct);
+        clientDropDown.removeItem(ct.getClientName());
+        clientArrayList.remove(ct);
         System.out.println("removeFromClient 1");
         
         System.out.println("removeFromClient 2");
@@ -293,17 +318,20 @@ public class ChatView extends JPanel implements ActionListener {
         if(e.getSource()==connectButton){
             ConnectView conView = new ConnectView();
             System.out.println("Tjohej");
-            try {
-                Socket clientsocket = new Socket(conView.getAddress(),conView.getPort());
-                BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
-                PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(), true);
-                
-                
-                controller.addClient(outStream, inStream);
-                System.out.println(conView.getTextMessage());
-                controller.sendConnectionRequest(conView.getTextMessage());
-            } catch (IOException ex) {
-                Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
+            if(conView.getConnectionOk()){
+                try {
+                    Socket clientsocket = new Socket(conView.getAddress(),conView.getPort());
+                    BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
+                    PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(), true);
+
+
+                    controller.addClient(outStream, inStream);
+                    System.out.println(conView.getTextMessage());
+                    controller.sendConnectionRequest(conView.getTextMessage());
+                } catch (IOException ex) {
+                    Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
             }
         }
         
@@ -334,7 +362,7 @@ public class ChatView extends JPanel implements ActionListener {
             System.out.println(clientDropDown.getSelectedItem());
             if(clientDropDown.getSelectedItem()!=null){
             System.out.println(clientDropDown.getSelectedItem());
-            ClientThread ct = (ClientThread) clientDropDown.getSelectedItem();
+            ClientThread ct = (ClientThread) clientArrayList.get(clientDropDown.getSelectedIndex());
             controller.killClient(ct);
             //controller.killConversation();
            // ct.killClientThread(false);

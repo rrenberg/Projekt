@@ -60,7 +60,9 @@ public class ConversationController {
     }
     
     public void addClient(PrintWriter inOutStream, BufferedReader inInStream){
-        clients.add(new ClientThread(inInStream, inOutStream, myParser, this));
+        ClientThread newClient = new ClientThread(inInStream, inOutStream, myParser, this);
+        clients.add(newClient);
+        chatview.addToClient(newClient);
     }
     
     public void sendConnectionRequest(String inText){
