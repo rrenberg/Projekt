@@ -93,7 +93,7 @@ public class ChatView extends JPanel implements ActionListener {
 
         scrollPaneShowText.getViewport().setBackground(Color.WHITE);
 
-        scrollPaneShowText.setPreferredSize(new Dimension(950, 500));
+        scrollPaneShowText.setPreferredSize(new Dimension(600, 300));
 
         // Create the buttons 
         sendFileButton = new JButton("SendFile");
@@ -224,7 +224,7 @@ public class ChatView extends JPanel implements ActionListener {
     public void addMyText(String inText) {
 
         StyledDocument doc = showTextPane.getStyledDocument();
-        Style style = showTextPane.addStyle("Hej", null);
+        Style style = showTextPane.addStyle(null, null);
         StyleConstants.setForeground(style, controller.getColor());
         StyleConstants.setAlignment(style, StyleConstants.ALIGN_LEFT);
 

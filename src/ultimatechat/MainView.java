@@ -45,8 +45,8 @@ public class MainView extends JFrame {
         super("UltimateChat");
         ultimateChat=inultimateChat;
         //Set frame settings
-        setPreferredSize(new Dimension(1150, 800));
-        setMinimumSize(new Dimension(1150, 800));
+        setPreferredSize(new Dimension(1150, 700));
+        setMinimumSize(new Dimension(1150, 700));
         
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,7 +74,7 @@ public class MainView extends JFrame {
         
         //Create JTabbedPane
         chooseConversationPanel = new JTabbedPane();
-        chooseConversationPanel.setPreferredSize(new Dimension(900, 900));
+        chooseConversationPanel.setPreferredSize(new Dimension(600, 500));
 
         chooseConversationPanel.setTabPlacement(JTabbedPane.TOP);
 

@@ -149,13 +149,13 @@ public class XMLParser {
         
     }
     public String rewriteTags(String inText){
-        String newString = inText.replace(">", "&gt;");
-        return newString.replace("<", "&lt;");
+        String newString = inText.replace(">", "&gt;").replace("<", "&lt;").replace("&", "&amp;");
+        return newString;
     }
     public String unrewriteTags(String inText){
         
-        String newString = inText.replace("&gt;", ">");
-        return newString.replace("&lt;", ">");
+        String newString = inText.replace("&gt;", ">").replace("&lt;", ">").replace("&amp;", "");
+        return newString;
     }
     
     public String disconnectXML(String inName, Color incolor){
