@@ -6,8 +6,11 @@
 package ultimatechat;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,13 +38,15 @@ public class MainView extends JFrame {
     private ArrayList<JPanel> conversationTabList;
     private int numberOfConversations;
     private ArrayList activeConversations = new ArrayList<>();
+    
+    private JButton serverButton;
 
     public MainView(UltimateChat inultimateChat) {
         super("UltimateChat");
         ultimateChat=inultimateChat;
         //Set frame settings
-        setPreferredSize(new Dimension(1100, 800));
-        setMinimumSize(new Dimension(1100, 800));
+        setPreferredSize(new Dimension(1150, 800));
+        setMinimumSize(new Dimension(1150, 800));
         
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,7 +106,37 @@ public class MainView extends JFrame {
         
         //The first tab should be the selected tab 
         
+        serverButton = new JButton("Server: ON");
+        serverButton.setBackground(Color.GREEN);
+        serverButton.setOpaque(true);
+        serverButton.setBorderPainted(false);
+        serverButton.addActionListener(new ActionListener()  {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(serverButton.getBackground() == Color.GREEN){
+                serverButton.setBackground(Color.RED);
+                serverButton.setText("Server: OFF");
+            try{
+                ultimateChat.serverSocket.close();
+                ultimateChat.server=false;
+            }catch(Exception ex){
+                Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }else{
+                serverButton.setBackground(Color.GREEN);
+                serverButton.setText("Server: ON");
+                ultimateChat.server=true;
+                Thread thread = new Thread(ultimateChat);
+                thread.start();
+            }
+            }
+        
+        });
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(serverButton);
+        add(buttonPanel,BorderLayout.SOUTH);
+        
         pack();
         setVisible(true);
     }
@@ -155,6 +190,7 @@ public class MainView extends JFrame {
         //Set conversationPanel to Tab
         chooseConversationPanel.setSelectedIndex(0);
     }
+    
     
     private void removeActiveConv(JPanel inPanel){
         //inPanel.t

@@ -164,7 +164,7 @@ public class UltimateChat implements Runnable {
             
         }
            
-    
+        System.out.println("Slutar att lyssna");
     }
     
     public void createDialogForNameAndPort(){
