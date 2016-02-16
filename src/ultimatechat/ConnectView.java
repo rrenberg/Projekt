@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * ClientThread
+ *
+ * Version 1.0
+ *
+ * 16-02-2016
  */
 package ultimatechat;
 
@@ -15,7 +17,10 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author The ZumBot 2.0
+ * @author Rasmus Renberg and Jakob Arnoldsson
+ * 
+ * The class ConnectView creats an dialogpanel for connection with other client
+ * or server.
  */
 public class ConnectView 
 {
@@ -24,7 +29,9 @@ public class ConnectView
     private String textMessage;
     private boolean connectionOk = false;  
             
-            
+    /**
+     *Constructor that creats dialogpanel for connection.
+     */
     public ConnectView(){
         // Create textfields and panel for the Dialog
         JTextField portTextField = new JTextField(6);
@@ -42,18 +49,22 @@ public class ConnectView
         dialogPanel.add(new JLabel("Message:"));
         dialogPanel.add(TextField);
         
+        //Creats dialogpane
         int ans = JOptionPane.showConfirmDialog(null, dialogPanel,
                 "Connect", JOptionPane.CANCEL_OPTION);
+        
         if(ans==0){
          try{
                 port = Integer.valueOf(portTextField.getText());
                    
-                address = InetAddress.getByName(addressTextField.getText()).toString().substring(1);
-                System.out.println(InetAddress.getByName(addressTextField.getText()).toString());
+                address = InetAddress.getByName(addressTextField.getText()).
+                        toString().substring(1);
+                
                 textMessage = TextField.getText();
                 connectionOk = true;
 
         }catch(Exception ex){
+                //If some of the input where incorrect, creats a warning popup.
                 JFrame tempJF = new JFrame("Some Input was incorrect");
                 JOptionPane.showMessageDialog(tempJF, "Varning! Invalid input! ",
                         "Invalid Input",
@@ -62,18 +73,34 @@ public class ConnectView
         }
     }
     
+    /**
+     *
+     * @return boolean
+     */
     public boolean getConnectionOk(){
         return connectionOk;
     }
     
+    /**
+     *
+     * @return Integer
+     */
     public int getPort(){
         return port;
     }
     
+    /**
+     *
+     * @return String
+     */
     public String getAddress(){
         return address;
     }
     
+    /**
+     *
+     * @return String
+     */
     public String getTextMessage(){
         return textMessage;
     }

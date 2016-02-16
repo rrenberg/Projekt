@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * ClientThread
+ *
+ * Version 1.0
+ *
+ * 16-02-2016
  */
 package ultimatechat;
 
@@ -19,10 +21,13 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author The ZumBot 2.0
+ * @author Rasmus Renberg and Jakob Arnoldsson
+ * 
+ * The class ConversationController provieds controll over the specific 
+ * conversation. Controlls all clients and visuals of the conversation.
  */
 public class ConversationController {
-    
+
     UltimateChat myUltimateChat;
     ChatView chatview;
     private Sender sender;
@@ -30,124 +35,187 @@ public class ConversationController {
     private Color color;
     private ArrayList<ClientThread> clients;
     private XMLParser myParser;
-    
-    public ConversationController(String inName, Color inColor,XMLParser inParser, UltimateChat inUltimatechat){
+
+    /**
+     *
+     * @param inName
+     * @param inColor
+     * @param inParser
+     * @param inUltimatechat
+     * 
+     * Constructor which sets the parameters.
+     * 
+     */
+    public ConversationController(String inName, Color inColor, XMLParser inParser,
+            UltimateChat inUltimatechat) {
+        
         name = inName;
         color = inColor;
-        chatview = new ChatView(this); 
+        chatview = new ChatView(this);
         myParser = inParser;
         clients = new ArrayList<>();
         myUltimateChat = inUltimatechat;
     }
-    
-    public void bounceTextMessage(String inXML,ClientThread inClient){
-        for(ClientThread i:clients){
-            if(i!=inClient){
+
+    /**
+     *
+     * @param inXML
+     * @param inClient
+     * 
+     * Function that sends the recived message to all other clients in the
+     * same conversation.
+     */
+    public void bounceTextMessage(String inXML, ClientThread inClient) {
+        for (ClientThread i : clients) {
+            if (i != inClient) {
                 try {
                     i.getOutPutStream().println(inXML);
                 } catch (Exception ex) {
-                    Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ConversationController.class.getName()).
+                            log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    
-    public void recieveTextMessage(String inName, Color inColor, String inText, ClientThread inClient){
-        System.out.println("Före i recieve");
-        chatview.addOthersText(inText, inColor, inName);
 
-        System.out.println("Efter i recieve");
+    /**
+     *
+     * @param inName
+     * @param inColor
+     * @param inText
+     * @param inClient
+     * 
+     * Function that displays the recived message.
+     */
+    public void recieveTextMessage(String inName, Color inColor, String inText, ClientThread inClient) {
+        chatview.addOthersText(inText, inColor, inName);
     }
-    
-    public void addClient(PrintWriter inOutStream, BufferedReader inInStream){
+
+    /**
+     *
+     * @param inOutStream
+     * @param inInStream
+     * 
+     * Function that adds new Client to the conversation by creating a new
+     * ClientThread object.
+     */
+    public void addClient(PrintWriter inOutStream, BufferedReader inInStream) {
         ClientThread newClient = new ClientThread(inInStream, inOutStream, myParser, this);
         clients.add(newClient);
         chatview.addToClient(newClient);
     }
-    
-    public void sendConnectionRequest(String inText){
-       
+
+    /**
+     *
+     * @param inText
+     * 
+     * Function that send a connectionrequest.
+     */
+    public void sendConnectionRequest(String inText) {
+
         try {
-            clients.get(clients.size()-1).getOutPutStream().println(myParser.sendrequestToXML(inText,name));
+            clients.get(clients.size() - 1).getOutPutStream().println(myParser.sendrequestToXML(inText, name));
         } catch (Exception ex) {
             Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-    }
-    
-    public void sendText(String inText){
-        for(ClientThread i:clients){
 
+    }
+
+    /**
+     *
+     * @param inText
+     * 
+     * Function that send Text message to client.
+     */
+    public void sendText(String inText) {
+        for (ClientThread i : clients) {
             try {
                 System.out.println(clients.size());
-                i.getOutPutStream().println(myParser.sendText(inText,name,color));
+                i.getOutPutStream().println(myParser.sendText(inText, name, color));
             } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }
-    
-    public String getName(){
+
+    /**
+     *
+     * @return String
+     */
+    public String getName() {
         return name;
     }
-    
-    public Color getColor(){
+
+    /**
+     *
+     * @return color
+     */
+    public Color getColor() {
         return color;
     }
-    
-    public UltimateChat getUltimateChat(){
+
+    /**
+     *
+     * @return UltimateChat
+     */
+    public UltimateChat getUltimateChat() {
         return myUltimateChat;
     }
-    
-    public void setColor(Color inColor){
-        color=inColor;
+
+    /**
+     *
+     * @param inColor
+     */
+    public void setColor(Color inColor) {
+        color = inColor;
     }
-    
-    public ArrayList<ClientThread> getClients(){
+
+    /**
+     *
+     * @return ArrayList Returns
+     */
+    public ArrayList<ClientThread> getClients() {
         return clients;
     }
-    
-    
-    public void killConversation(){
-        for(ClientThread i: clients){
-            
+
+    /**
+     *
+     */
+    public void killConversation() {
+        for (ClientThread i : clients) {
+
             try {
-                System.out.println("asdasaaa "+ myParser.disconnectXML(name,Color.RED));
-                i.getOutPutStream().println(myParser.disconnectXML(name,Color.RED));
-                System.out.println("Kickar client:"+i);
+                System.out.println("asdasaaa " + myParser.disconnectXML(name, Color.RED));
+                i.getOutPutStream().println(myParser.disconnectXML(name, Color.RED));
+                System.out.println("Kickar client:" + i);
                 i.killClientThread(false);
                 //clients.remove(i);
-               //myUltimateChat.conversationControllerList.remove(this);
+                //myUltimateChat.conversationControllerList.remove(this);
             } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
-                
-            
+
         }
     }
-    
-    public void killClient(ClientThread ct){
-        
-            
-            try {
-                System.out.println("asdasaaa "+ myParser.disconnectXML(name,Color.RED));
-                ct.getOutPutStream().println(myParser.disconnectXML(name,Color.RED));
-                System.out.println("Kickar client:"+ct);
-                ct.killClientThread(false);
+
+    /**
+     *
+     * @param ct
+     */
+    public void killClient(ClientThread ct) {
+
+        try {
+            System.out.println("asdasaaa " + myParser.disconnectXML(name, Color.RED));
+            ct.getOutPutStream().println(myParser.disconnectXML(name, Color.RED));
+            System.out.println("Kickar client:" + ct);
+            ct.killClientThread(false);
                 //clients.remove(i);
-               //myUltimateChat.conversationControllerList.remove(this);
-            } catch (Exception ex) {
-                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                
-            
-        
+            //myUltimateChat.conversationControllerList.remove(this);
+        } catch (Exception ex) {
+            Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
-   
-    }
-    
-    
-    
-
+}
