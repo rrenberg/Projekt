@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * ClientThread
+ *
+ * Version 1.0
+ *
+ * 16-02-2016
  */
 package ultimatechat;
 
@@ -26,155 +28,221 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- *
- * @author jakobarnoldsson
+ *The class XMLParser provides a parser to pars recived messages and to messages 
+ * that will be sent to clients.
+ * 
+ * @author Rasmus Renberg and Jakob Arnoldsson
  */
 public class XMLParser {
-    
+
     private DocumentBuilderFactory DBFactory;
     private DocumentBuilder DBuilder;
-  
-    public XMLParser(){
+
+    /**
+     *Constructor that creates a DocumentBuilderFactroy.
+     */
+    public XMLParser() {
         DBFactory = DocumentBuilderFactory.newInstance();
-        
+
         try {
             DBuilder = DBFactory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public String requestParser (String inText) throws Exception{
-        System.out.println("Inne i requesPars:"+inText);
+
+    /**
+     *Function requestParser takes in XML with request tags and pars it.
+     * 
+     * @param inText The request message
+     * @return String Returns a string of the parsed request message.
+     * @throws Exception If the request message is wrong
+     */
+    public String requestParser(String inText) throws Exception {
         InputSource is = new InputSource(new StringReader(inText));
         return DBuilder.parse(is).getDocumentElement().getTextContent();
     }
-    
-    public boolean checkIfRequest(String inXML) throws Exception{
+
+    /**
+     * Function checkIfRequest check if the recived message is a request message.
+     *
+     * @param inXML A string of the recived xml.
+     * @return boolean Returns a boolean value (true if inXML have request tags).
+     * @throws Exception
+     */
+    public boolean checkIfRequest(String inXML) throws Exception {
+        
+        //Takes the first message tag and get the children of it.
         Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
         NodeList nList = doc.getElementsByTagName("message");
         Node nNode = nList.item(0);
         NodeList nList2 = nNode.getChildNodes();
         boolean request = false;
-        for(int i =0; i<nList2.getLength();i++){
-                   Node n2 = nList2.item(i);
-                   if (n2.getNodeType() == Node.ELEMENT_NODE) {
-                        Element e = (Element) n2;
-                        System.out.println(e.getTagName());
-                        if(e.getTagName().equals("request")){
-                            request = true;
-                        }
-                   }
+        
+        //For every child, check if it is a request tag.
+        for (int i = 0; i < nList2.getLength(); i++) {
+            Node n2 = nList2.item(i);
+            if (n2.getNodeType() == Node.ELEMENT_NODE) {
+                Element e = (Element) n2;
+                if (e.getTagName().equals("request")) {
+                    request = true;
+                }
+            }
         }
-        System.out.println("checkRequest:"+request);
+
         return request;
     }
-    
-    public String sendrequestToXML(String inText, String inName){
-        return "<message sender=\""+rewriteTags(inName)+"\">"+"<request>"+rewriteTags(inText)+"</request></message>";
+
+    /**
+     * 
+     * Function sendrequestToXML  creates request message in xml-format.
+     *
+     * @param inText Message that we send when we want to connect
+     * @param inName Our name
+     * @return String Returns the xml-string
+     */
+    public String sendrequestToXML(String inText, String inName) {
+        return "<message sender=\"" + rewriteTags(inName) + "\">" + "<request>" 
+                + rewriteTags(inText) + "</request></message>";
     }
-    
-    public String sendText(String inText, String inName, Color incolor){
-        System.out.println("<message sender=\""+rewriteTags(inName)+"\">"+"<text color=\"#"+
-                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+rewriteTags(inText)+
-                "</text></message>");
-        return "<message sender=\""+rewriteTags(inName)+"\">"+"<text color=\"#"+
-                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+rewriteTags(inText)+
-                "</text></message>";
+
+    /**
+     *
+     * Function sendText creates a message in xml-format.
+     * 
+     * @param inText Our text we want to send
+     * @param inName Our name
+     * @param incolor Our color of our text
+     * @return String Returns the message in xml-format
+     */
+    public String sendText(String inText, String inName, Color incolor) {
+        return "<message sender=\"" + rewriteTags(inName) + "\">" + "<text color=\"#"
+                + Integer.toHexString(incolor.getRGB()).substring(2) + "\">" + rewriteTags(inText)
+                + "</text></message>";
     }
-    
-    public ArrayList unParseXML(String inXML) throws Exception{
-        System.out.println("asd: "+inXML);
-        
+
+    /**
+     * 
+     * Function unParseXML pars our recived xml and throws exception if 
+     * the xml was wrong.
+     *
+     * @param inXML The xml message we recived
+     * @return inFormation Returns an Arraylist with parsed information from the recived message
+     * @throws Exception
+     */
+    public ArrayList unParseXML(String inXML) throws Exception {
+
         ArrayList<String> inFormation = new ArrayList<>();
-        
-        //try {
-            if(!inXML.equals("null")){
-                System.out.println(inXML.equals("null"));
-                System.out.println("asd2: "+inXML);
-                Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
 
-               // doc.setTextContent(unrewriteTags(doc.getTextContent()));
-                //doc.getDocumentElement().normalize();
-                inFormation.add(((Element) (doc.getElementsByTagName("message").item(0))).getAttribute("sender"));
-                if(inFormation.get(0).length()==0){
-                    throw new NullPointerException();
-                }
-                NodeList nList = doc.getElementsByTagName("text");
-                Node nNode = nList.item(0);
-                ;
+        //As long as inXML isnt null, try to pars
+        if (!inXML.equals("null")) {
 
-                Element eElement = (Element) nNode;
-                String message = eElement.getTextContent();
-                NodeList nList2 = nNode.getChildNodes();
-                System.out.println(nNode.getTextContent());
-                boolean disconnect = false;
-                for(int i =0; i<nList2.getLength();i++){
-                    Node n2 = nList2.item(i);
-                   if (n2.getNodeType() == Node.ELEMENT_NODE) {
-                   Element e = (Element) n2;
-                    //Element e = (Element) n2;
-                    if(!e.getTagName().equals("fetstil") && !e.getTagName().equals("kursiv")){
-                        if(e.getTagName().equals("disconnect")){
+            Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
+            
+            //Get name of the sender
+            inFormation.add(((Element) (doc.getElementsByTagName("message").
+                    item(0))).getAttribute("sender"));
+            
+            //If name null, throw exception
+            if (inFormation.get(0).length() == 0) {
+                throw new NullPointerException();
+            }
+            
+            //Takes the first text tag, get textcontent and children to it.
+            NodeList nList = doc.getElementsByTagName("text");
+            Node nNode = nList.item(0);
+
+            Element eElement = (Element) nNode;
+            String message = eElement.getTextContent();
+            NodeList nList2 = nNode.getChildNodes();
+            boolean disconnect = false;
+            
+            //For every child of the text tag
+            for (int i = 0; i < nList2.getLength(); i++) {
+                Node n2 = nList2.item(i);
+                if (n2.getNodeType() == Node.ELEMENT_NODE) {
+                    Element e = (Element) n2;
+                    
+                    //Chcek if it have "fetstil","kursive" and "disconnect" tag.
+                    if (!e.getTagName().equals("fetstil") && !e.getTagName().
+                            equals("kursiv")) {
+                        
+                        if (e.getTagName().equals("disconnect")) {
                             disconnect = true;
-                            System.out.print("diss true");
                         }
-                        System.out.println(e.getTagName());
                         nNode.removeChild(n2);
                     }
 
                 }
-                }
-    //            eElement.getElementsByTagName("fetstil").item(0).getTextContent();
-                System.out.println(eElement.getAttribute("color"));
-                inFormation.add(eElement.getAttribute("color"));
-
-                inFormation.add(unrewriteTags(nNode.getTextContent()));
-                if(disconnect){
-                    inFormation.add("1");
-                    System.out.print("diss true 2");
-                }
-
-            //inFormation.add(DBuilder.parse(is).getElementById("message").getAttribute("sender"));
-            //inFormation.add(DBuilder.parse(is).getElementById("text").getAttribute("color"));
-            //inFormation.add(DBuilder.parse(is).getElementById("message").getElementsByTagName("text").item(0).getTextContent());
             }
-       // } catch (Exception ex) {
-           //Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
-           System.out.println(invalidXML(inFormation));
-           //return invalidXML(inFormation);
-        //}
-        
+      
+            //Get color of sender.
+            inFormation.add(eElement.getAttribute("color"));
+            
+            //Get text message of sender
+            inFormation.add(unrewriteTags(nNode.getTextContent()));
+            
+            //If disconnect, add 1
+            if (disconnect) {
+                inFormation.add("1");
+            }
+
+        }
+
         return inFormation;
-        
+
     }
-    public String rewriteTags(String inText){
-        String newString = inText.replace(">", "&gt;").replace("<", "&lt;").replace("&", "&amp;");
+
+    /**
+     * Function rewriteTags, rewrite tag signs and "&" to specified combination.
+     *
+     * @param inText Text that this signs should be rewriten.
+     * @return newString Returns the rewriten string.
+     */
+    public String rewriteTags(String inText) {
+        String newString = inText.replace(">", "&gt;").replace("<", "&lt;").
+                replace("&", "&amp;");
         return newString;
     }
-    public String unrewriteTags(String inText){
-        
-        String newString = inText.replace("&gt;", ">").replace("&lt;", ">").replace("&amp;", "");
+
+    /**
+     * Function unrewriteTags does the opposite to what rewriteTags does.
+     *
+     * @param inText Text that should be unrewriten.
+     * @return newString Returns the unrewriten string.
+     */
+    public String unrewriteTags(String inText) {
+        String newString = inText.replace("&gt;", ">").replace("&lt;", ">").
+                replace("&amp;", "");
         return newString;
     }
-    
-    public String disconnectXML(String inName, Color incolor){
-        return "<message sender=\""+rewriteTags(inName)+"\">"+"<text color=\"#"+
-                Integer.toHexString(incolor.getRGB()).substring(2)+"\">"+"<disconnect/>"+
-                "</text></message>";
+
+    /**
+     * Function disconnectXML creates the xml-message for disconnection.
+     *
+     * @param inName Our name
+     * @param incolor Our color
+     * @return Returns the disconnect messages in xml-format
+     */
+    public String disconnectXML(String inName, Color incolor) {
+        return "<message sender=\"" + rewriteTags(inName) + "\">" + "<text color=\"#"
+                + Integer.toHexString(incolor.getRGB()).substring(2) + "\">" + "<disconnect/>"
+                + "</text></message>";
     }
-    
-    private ArrayList<String> invalidXML(ArrayList<String> inFormation){
+
+    //Function that handels the situation when the xml-message could not be properly parsed.
+    private ArrayList<String> invalidXML(ArrayList<String> inFormation) {
+        
         ArrayList<String> errArray = new ArrayList<>();
-           if(inFormation.size()!=0){
-                errArray.add(inFormation.get(0));
-           }else{
-                   errArray.add("Okänd");
-           }
-           errArray.add((Integer.toHexString(Color.RED.getRGB()).substring(2)));
-           errArray.add("Kunde inte parsa XML");
-           return errArray;
+        if (inFormation.size() != 0) {
+            errArray.add(inFormation.get(0));
+        } else {
+            errArray.add("Okänd");
+        }
+        
+        errArray.add((Integer.toHexString(Color.RED.getRGB()).substring(2)));
+        errArray.add("Kunde inte parsa XML");
+        return errArray;
     }
-    
-    
+
 }

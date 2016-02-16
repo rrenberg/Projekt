@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * ClientThread
+ *
+ * Version 1.0
+ *
+ * 16-02-2016
  */
 package ultimatechat;
 
@@ -29,8 +31,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 /**
+ * The class ChatView extends JPanel and implements ActionListener. The class
+ * provides the visual GUI to the specific conversation.
  *
- * @author The ZumBot 2.0
+ * @author Rasmus Renberg and Jakob Arnoldsson
  */
 public class ChatView extends JPanel implements ActionListener {
 
@@ -46,7 +50,6 @@ public class ChatView extends JPanel implements ActionListener {
     private JComboBox selectEncryption;
     private JButton selectColor;
     private JButton connectButton;
-    
 
     private JPanel showTextPanel;
     private JPanel disconnectPanel;
@@ -107,8 +110,6 @@ public class ChatView extends JPanel implements ActionListener {
 
         selectColor = new JButton("Color");
         selectColor.addActionListener(this);
-        
-        
 
         connectButton = new JButton("Connect");
         connectButton.addActionListener(this);
@@ -211,7 +212,6 @@ public class ChatView extends JPanel implements ActionListener {
         d.gridwidth = 1;
         d.gridheight = 1;
         add(selectEncryption, d);
-        
 
         setVisible(true);
     }
@@ -274,8 +274,8 @@ public class ChatView extends JPanel implements ActionListener {
     }
 
     /**
-     * Sets the correct name to the client in clientDropDown. Is called 
-     * every time a client sends a message.
+     * Sets the correct name to the client in clientDropDown. Is called every
+     * time a client sends a message.
      *
      * @param ct The client which name is to be set.
      */
@@ -370,7 +370,7 @@ public class ChatView extends JPanel implements ActionListener {
             ArrayList answer = C.createDialogForConnectionRequestPopup();
         }
         if (e.getSource() == disconnectButton) {
-            
+
             if (clientDropDown.getSelectedItem() != null) {
 
                 ClientThread ct = (ClientThread) clientArrayList.get(clientDropDown.getSelectedIndex());
@@ -379,7 +379,6 @@ public class ChatView extends JPanel implements ActionListener {
             }
 
         }
-        
 
     }
 

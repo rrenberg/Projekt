@@ -16,11 +16,10 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Rasmus Rehberg and Jakob Arnoldsson
- *
  * The Class StartUpThread implements Runneble and provides a temporary Thread
  * and connection during the first phase of the conversation.
  *
+ * @author Rasmus Rehberg and Jakob Arnoldsson
  */
 public class StartUpThread implements Runnable {
 
@@ -30,12 +29,11 @@ public class StartUpThread implements Runnable {
     CreateDialogForConnectionRequest C;
 
     /**
-     *
+     *Constructor which set the parameters
+     * 
      * @param inInStream
      * @param inOutStream
      * @param inUltimateChat
-     *
-     * Constructor which set the parameters
      */
     public StartUpThread(BufferedReader inInStream, PrintWriter inOutStream, UltimateChat inUltimateChat) {
         inStream = inInStream;

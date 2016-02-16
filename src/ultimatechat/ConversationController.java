@@ -23,8 +23,8 @@ import java.util.logging.Logger;
  *
  * @author Rasmus Renberg and Jakob Arnoldsson
  * 
- * The class ConversationController provieds controll over the specific 
- * conversation. Controlls all clients and visuals of the conversation.
+ * The class ConversationController provides control over the specific 
+ * conversation. Controls all clients and visuals of the conversation.
  */
 public class ConversationController {
 
@@ -172,26 +172,24 @@ public class ConversationController {
     }
 
     /**
+     * 
+     * Function that returns clients in conversation.
      *
-     * @return ArrayList Returns
+     * @return ArrayList Returns the arraylist with the clients in the conversation.
      */
     public ArrayList<ClientThread> getClients() {
         return clients;
     }
 
     /**
-     *
+     *Function that kill all clients and the conversation.
      */
     public void killConversation() {
         for (ClientThread i : clients) {
-
             try {
-                System.out.println("asdasaaa " + myParser.disconnectXML(name, Color.RED));
                 i.getOutPutStream().println(myParser.disconnectXML(name, Color.RED));
-                System.out.println("Kickar client:" + i);
                 i.killClientThread(false);
-                //clients.remove(i);
-                //myUltimateChat.conversationControllerList.remove(this);
+
             } catch (Exception ex) {
                 Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -200,18 +198,16 @@ public class ConversationController {
     }
 
     /**
-     *
+     *Function kills client, sends disconnect tag. 
+     * 
      * @param ct
      */
     public void killClient(ClientThread ct) {
 
         try {
-            System.out.println("asdasaaa " + myParser.disconnectXML(name, Color.RED));
             ct.getOutPutStream().println(myParser.disconnectXML(name, Color.RED));
-            System.out.println("Kickar client:" + ct);
             ct.killClientThread(false);
-                //clients.remove(i);
-            //myUltimateChat.conversationControllerList.remove(this);
+
         } catch (Exception ex) {
             Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Rasmus Renberg and Jakob Arnoldsson
  *
- * The class ClientThread implements runnable and provieds a thread for every
+ * The class ClientThread implements runnable and provides a thread for every
  * connection and waits for messages from the other client.
  */
 public class ClientThread implements Runnable {
