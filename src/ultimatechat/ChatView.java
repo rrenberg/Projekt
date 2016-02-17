@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -331,13 +332,27 @@ public class ChatView extends JPanel implements ActionListener {
             ConnectView conView = new ConnectView();
             if (conView.getConnectionOk()) {
                 try {
+                    boolean sameAsOtherClient = false;
                     Socket clientsocket = new Socket(conView.getAddress(), conView.getPort());
-                    BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
-                    PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(), true);
+                    for(ClientThread c: controller.getClients()){
+                        if(c.getAddress().equals(conView.getAddress())){
+                            sameAsOtherClient=true;
+                        }
+                    }
+                    if(!sameAsOtherClient && !controller.getSameAsOtherClient()){
+                        InetSocketAddress isa = (InetSocketAddress) clientsocket.getRemoteSocketAddress();
+                        String address = isa.getAddress().toString().substring(1);
+                        BufferedReader inStream = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
+                        PrintWriter outStream = new PrintWriter(clientsocket.getOutputStream(), true);
 
-                    controller.addClient(outStream, inStream);
+                        controller.addClient(outStream, inStream, address);
+                        System.out.println(controller.getSameAsOtherClient());
 
-                    controller.sendConnectionRequest(conView.getTextMessage());
+                            controller.sendConnectionRequest(conView.getTextMessage());
+                    }else{
+                        addMyText("Connection denied, same as already existing connection");
+                    }
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(ChatView.class.getName()).log(Level.SEVERE, null, ex);
                 }

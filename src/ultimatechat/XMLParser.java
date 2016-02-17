@@ -130,7 +130,10 @@ public class XMLParser {
      * @return inFormation Returns an Arraylist with parsed information from the recived message
      * @throws Exception
      */
-    public ArrayList unParseXML(String inXML) throws Exception {
+    public synchronized ArrayList unParseXML(String inXML) throws Exception {
+        
+        System.out.println(inXML);
+        System.out.println("Slut");
 
         ArrayList<String> inFormation = new ArrayList<>();
 
@@ -237,21 +240,6 @@ public class XMLParser {
         return "<message sender=\"" + rewriteTags(inName) + "\">" + "<text color=\"#"
                 + Integer.toHexString(incolor.getRGB()).substring(2) + "\">" + "<disconnect/>"
                 + "</text></message>";
-    }
-
-    //Function that handels the situation when the xml-message could not be properly parsed.
-    private ArrayList<String> invalidXML(ArrayList<String> inFormation) {
-        
-        ArrayList<String> errArray = new ArrayList<>();
-        if (inFormation.size() != 0) {
-            errArray.add(inFormation.get(0));
-        } else {
-            errArray.add("Okänd");
-        }
-        
-        errArray.add((Integer.toHexString(Color.RED.getRGB()).substring(2)));
-        errArray.add("Kunde inte parsa XML");
-        return errArray;
     }
     
     //Function that sends reply no during connection request

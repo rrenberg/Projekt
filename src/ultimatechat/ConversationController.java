@@ -29,11 +29,11 @@ public class ConversationController {
 
     UltimateChat myUltimateChat;
     ChatView chatview;
-    private Sender sender;
     private String name;
     private Color color;
     private ArrayList<ClientThread> clients;
     private XMLParser myParser;
+    private boolean sameAsOtherClient;
 
     /**
      *Constructor which sets the parameters.
@@ -66,6 +66,7 @@ public class ConversationController {
         for (ClientThread i : clients) {
             if (i != inClient) {
                 try {
+                    
                     i.getOutPutStream().println(inXML);
                 } catch (Exception ex) {
                     Logger.getLogger(ConversationController.class.getName()).
@@ -96,11 +97,22 @@ public class ConversationController {
      * @param inOutStream Client inStream (BufferedReader)
      * @param inInStream Client outStream(PrintWriter)
      */
-    public void addClient(PrintWriter inOutStream, BufferedReader inInStream) {
-        ClientThread newClient = new ClientThread(inInStream, inOutStream,
-                myParser, this);
-        clients.add(newClient);
-        chatview.addToClient(newClient);
+    public void addClient(PrintWriter inOutStream, BufferedReader inInStream, String inAddress) {
+        
+        sameAsOtherClient = false;
+        for(ClientThread c: clients){
+            if(c.getAddress().equals(inAddress)){
+                sameAsOtherClient=true;
+                chatview.addMyText("Connection denied, same as already existing connection");
+            }
+        }
+        if(!sameAsOtherClient){
+            ClientThread newClient = new ClientThread(inInStream, inOutStream,
+                myParser, this, inAddress);
+        
+            clients.add(newClient);
+            chatview.addToClient(newClient);
+        }
     }
 
     /**
@@ -215,6 +227,9 @@ public class ConversationController {
                     log(Level.SEVERE, null, ex);
         }
 
+    }
+    public boolean getSameAsOtherClient(){
+        return sameAsOtherClient;
     }
 
 }

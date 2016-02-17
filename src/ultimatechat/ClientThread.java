@@ -33,6 +33,7 @@ public class ClientThread implements Runnable {
     private ConversationController myController;
     private Boolean aLive;
     private String clientName = "Okänd";
+    private String address;
 
     /**
      *Constructor that sets parameters and starts thread.
@@ -44,13 +45,14 @@ public class ClientThread implements Runnable {
      *
      */
     public ClientThread(BufferedReader inPutStream, PrintWriter outPutStream,
-            XMLParser inXMLParser, ConversationController inController) {
+            XMLParser inXMLParser, ConversationController inController,String inAddress) {
         
         DIStream = inPutStream;
         DOStream = outPutStream;
         myXMLParser = inXMLParser;
         myController = inController;
         aLive = true;
+        address=inAddress;
 
         Thread t = new Thread(this);
         t.start();
@@ -192,5 +194,8 @@ public class ClientThread implements Runnable {
                     null, ex);
         }
 
+    }
+    public String getAddress(){
+        return address;
     }
 }

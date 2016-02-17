@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -101,7 +102,7 @@ public class UltimateChat implements Runnable {
             serverSocket = new ServerSocket(port);
 
         } catch (IOException e) {
-            System.out.println("Could not listen on port: 4444");
+            System.out.println("Could not listen on port");
             System.exit(-1);
         }
 
@@ -118,9 +119,9 @@ public class UltimateChat implements Runnable {
                         new InputStreamReader(clientsocket.getInputStream()));
                 PrintWriter outStream = new PrintWriter(
                         clientsocket.getOutputStream(), true);
-
+                InetSocketAddress isa = (InetSocketAddress) clientsocket.getRemoteSocketAddress();
                 Thread thread = new Thread(new StartUpThread(inStream,
-                        outStream, this));
+                        outStream, this, isa.getAddress().toString().substring(1)));
                 thread.start();
 
             } catch (Exception ex) {

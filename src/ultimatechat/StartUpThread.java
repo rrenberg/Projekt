@@ -10,6 +10,7 @@ package ultimatechat;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +28,7 @@ public class StartUpThread implements Runnable {
     UltimateChat ultimateChat;
     PrintWriter outStream;
     CreateDialogForConnectionRequest C;
+    String address;
 
     /**
      *Constructor which set the parameters
@@ -36,11 +38,12 @@ public class StartUpThread implements Runnable {
      * @param inUltimateChat Our ultimateChat
      */
     public StartUpThread(BufferedReader inInStream, PrintWriter inOutStream,
-            UltimateChat inUltimateChat) {
+            UltimateChat inUltimateChat, String inAddress) {
         
         inStream = inInStream;
         ultimateChat = inUltimateChat;
         outStream = inOutStream;
+        address=inAddress;
 
     }
 
@@ -109,7 +112,7 @@ public class StartUpThread implements Runnable {
                             ultimateChat.conversationControllerList.
                                     get(ultimateChat.conversationControllerList.
                                             size() - 1).
-                                    addClient(outStream, inStream);
+                                    addClient(outStream, inStream, address);
 
                             ultimateChat.mainView.addConversation();
                             
@@ -117,7 +120,7 @@ public class StartUpThread implements Runnable {
                             //Adds client to old conversation.
                             ultimateChat.conversationControllerList.
                                     get((int) answer.get(1) - 1).
-                                    addClient(outStream, inStream);
+                                    addClient(outStream, inStream, address);
                             
                         }
                         
@@ -159,7 +162,7 @@ public class StartUpThread implements Runnable {
                         ultimateChat.createNewConversationController();
                         ultimateChat.conversationControllerList.get(ultimateChat.
                                 conversationControllerList.size() - 1).
-                                addClient(outStream, inStream);
+                                addClient(outStream, inStream, address);
 
                         ultimateChat.mainView.addConversation();
                         
@@ -167,7 +170,7 @@ public class StartUpThread implements Runnable {
                         
                         ultimateChat.conversationControllerList.
                                 get((int) answer.get(1) - 1).
-                                addClient(outStream, inStream);
+                                addClient(outStream, inStream,address);
                     }
                     
                 } else if ((int) answer.get(0) == 2) {
