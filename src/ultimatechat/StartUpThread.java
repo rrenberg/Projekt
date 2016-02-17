@@ -131,6 +131,10 @@ public class StartUpThread implements Runnable {
                                    sendrequestNOToXML("Connection denied",
                                            ultimateChat.name));
                         }else{
+                            outStream.println(ultimateChat.xmlParser.
+                                    sendText("Connection denied",ultimateChat.name,
+                                            Color.RED));
+                            java.lang.Thread.sleep(1000);
                             
                             outStream.println(ultimateChat.xmlParser.
                                     disconnectXML(ultimateChat.name, Color.RED));
