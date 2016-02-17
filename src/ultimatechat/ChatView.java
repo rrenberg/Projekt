@@ -1,5 +1,5 @@
 /*
- * ClientThread
+ * ChatView
  *
  * Version 1.0
  *

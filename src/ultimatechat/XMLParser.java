@@ -1,5 +1,5 @@
 /*
- * ClientThread
+ * XMLParser
  *
  * Version 1.0
  *
@@ -60,7 +60,7 @@ public class XMLParser {
      */
     public String requestParser(String inText) throws Exception {
         InputSource is = new InputSource(new StringReader(inText));
-        return DBuilder.parse(is).getDocumentElement().getTextContent();
+        return unrewriteTags(DBuilder.parse(is).getDocumentElement().getTextContent());
     }
 
     /**
@@ -136,7 +136,7 @@ public class XMLParser {
 
         //As long as inXML isnt null, try to pars
         if (!inXML.equals("null")) {
-
+            
             Document doc = DBuilder.parse(new InputSource(new StringReader(inXML)));
             
             //Get name of the sender
@@ -163,7 +163,7 @@ public class XMLParser {
                 if (n2.getNodeType() == Node.ELEMENT_NODE) {
                     Element e = (Element) n2;
                     
-                    //Chcek if it have "fetstil","kursive" and "disconnect" tag.
+                    //Check if it have "fetstil","kursive" and "disconnect" tag.
                     if (!e.getTagName().equals("fetstil") && !e.getTagName().
                             equals("kursiv")) {
                         
@@ -185,6 +185,15 @@ public class XMLParser {
             //If disconnect, add 1
             if (disconnect) {
                 inFormation.add("1");
+            }
+            
+            //If inXML is a request reply and the reply is no, then disconnect
+            if(checkIfRequest(inXML)){
+                if(((Element) (doc.getElementsByTagName("request").
+                        item(0))).getAttribute("reply").equals("no")){
+                    
+                    inFormation.add("2");
+                }
             }
 
         }
@@ -212,7 +221,7 @@ public class XMLParser {
      * @return newString Returns the unrewriten string.
      */
     public String unrewriteTags(String inText) {
-        String newString = inText.replace("&gt;", ">").replace("&lt;", ">").
+        String newString = inText.replace("&gt;", ">").replace("&lt;", "<").
                 replace("&amp;", "");
         return newString;
     }
@@ -244,5 +253,14 @@ public class XMLParser {
         errArray.add("Kunde inte parsa XML");
         return errArray;
     }
-
+    
+    //Function that sends reply no during connection request
+    public String sendrequestNOToXML(String inText, String inName) {
+        return "<message sender=\"" + rewriteTags(inName) + "\">" + 
+                "<request reply=\"no\"><text color=\"#"
+                + Integer.toHexString((Color.BLUE).getRGB()).substring(2) + 
+                "\">" + rewriteTags(inText)
+                + "</text></request></message>";
+    }
 }
+

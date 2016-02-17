@@ -1,5 +1,5 @@
 /*
- * ClientThread
+ * CreateDialogFOrConnectionRequest
  *
  * Version 1.0
  *

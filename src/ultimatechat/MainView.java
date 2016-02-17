@@ -1,5 +1,5 @@
 /*
- * ClientThread
+ * MainView
  *
  * Version 1.0
  *

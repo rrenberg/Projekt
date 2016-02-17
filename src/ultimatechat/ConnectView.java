@@ -1,5 +1,5 @@
 /*
- * ClientThread
+ * ConnectView
  *
  * Version 1.0
  *
@@ -16,11 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- *
- * @author Rasmus Renberg and Jakob Arnoldsson
- * 
  * The class ConnectView creats an dialogpanel for connection with other client
  * or server.
+ * 
+ * @author Rasmus Renberg and Jakob Arnoldsson
  */
 public class ConnectView 
 {
@@ -75,7 +74,7 @@ public class ConnectView
     
     /**
      *
-     * @return boolean
+     * @return boolean Returns if connection is ok
      */
     public boolean getConnectionOk(){
         return connectionOk;
@@ -83,7 +82,7 @@ public class ConnectView
     
     /**
      *
-     * @return Integer
+     * @return Integer Returns port
      */
     public int getPort(){
         return port;
@@ -91,7 +90,7 @@ public class ConnectView
     
     /**
      *
-     * @return String
+     * @return String Returns Address
      */
     public String getAddress(){
         return address;
@@ -99,7 +98,7 @@ public class ConnectView
     
     /**
      *
-     * @return String
+     * @return String Returns text-message
      */
     public String getTextMessage(){
         return textMessage;

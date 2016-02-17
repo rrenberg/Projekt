@@ -1,5 +1,5 @@
 /*
- * ClientThread
+ * ConversationController
  *
  * Version 1.0
  *
@@ -20,11 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Rasmus Renberg and Jakob Arnoldsson
- * 
- * The class ConversationController provides control over the specific 
+ *The class ConversationController provides control over the specific 
  * conversation. Controls all clients and visuals of the conversation.
+ * 
+ * @author Rasmus Renberg and Jakob Arnoldsson
  */
 public class ConversationController {
 
@@ -37,13 +36,12 @@ public class ConversationController {
     private XMLParser myParser;
 
     /**
-     *
-     * @param inName
-     * @param inColor
-     * @param inParser
-     * @param inUltimatechat
+     *Constructor which sets the parameters.
      * 
-     * Constructor which sets the parameters.
+     * @param inName Our name
+     * @param inColor Our color
+     * @param inParser Our Parser
+     * @param inUltimatechat Our UltimateChat
      * 
      */
     public ConversationController(String inName, Color inColor, XMLParser inParser,
@@ -58,12 +56,11 @@ public class ConversationController {
     }
 
     /**
-     *
-     * @param inXML
-     * @param inClient
-     * 
-     * Function that sends the recived message to all other clients in the
+     *Function that sends the recived message to all other clients in the
      * same conversation.
+     * 
+     * @param inXML XML that should be passed on to the other clients
+     * @param inClient Which client that sent the massage
      */
     public void bounceTextMessage(String inXML, ClientThread inClient) {
         for (ClientThread i : clients) {
@@ -79,61 +76,65 @@ public class ConversationController {
     }
 
     /**
-     *
-     * @param inName
-     * @param inColor
-     * @param inText
-     * @param inClient
+     *Function that displays the recived message.
      * 
-     * Function that displays the recived message.
+     * @param inName Clients name
+     * @param inColor Clients color
+     * @param inText Clients Text-Message
+     * @param inClient Client that sent the message
      */
-    public void recieveTextMessage(String inName, Color inColor, String inText, ClientThread inClient) {
+    public void recieveTextMessage(String inName, Color inColor, String inText,
+            ClientThread inClient) {
+        
         chatview.addOthersText(inText, inColor, inName);
     }
 
     /**
-     *
-     * @param inOutStream
-     * @param inInStream
-     * 
-     * Function that adds new Client to the conversation by creating a new
+     *Function that adds new Client to the conversation by creating a new
      * ClientThread object.
+     * 
+     * @param inOutStream Client inStream (BufferedReader)
+     * @param inInStream Client outStream(PrintWriter)
      */
     public void addClient(PrintWriter inOutStream, BufferedReader inInStream) {
-        ClientThread newClient = new ClientThread(inInStream, inOutStream, myParser, this);
+        ClientThread newClient = new ClientThread(inInStream, inOutStream,
+                myParser, this);
         clients.add(newClient);
         chatview.addToClient(newClient);
     }
 
     /**
-     *
-     * @param inText
+     *Function that send a connectionrequest.
      * 
-     * Function that send a connectionrequest.
+     * @param inText Our Text-message we want to send to the one we want to
+     * connect to
      */
     public void sendConnectionRequest(String inText) {
 
         try {
-            clients.get(clients.size() - 1).getOutPutStream().println(myParser.sendrequestToXML(inText, name));
+            clients.get(clients.size() - 1).getOutPutStream().println(myParser.
+                    sendrequestToXML(inText, name));
         } catch (Exception ex) {
-            Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationController.class.getName()).log(Level.
+                    SEVERE, null, ex);
         }
 
     }
 
     /**
-     *
-     * @param inText
+     *Function that send Text message to client.
      * 
-     * Function that send Text message to client.
+     * @param inText Our Text-message we want to send
      */
     public void sendText(String inText) {
         for (ClientThread i : clients) {
             try {
                 System.out.println(clients.size());
-                i.getOutPutStream().println(myParser.sendText(inText, name, color));
+                i.getOutPutStream().println(myParser.sendText(inText,
+                        name, color));
             } catch (Exception ex) {
-                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ConversationController.class.getName()).
+                        log(Level.SEVERE, null, ex);
             }
 
         }
@@ -141,7 +142,7 @@ public class ConversationController {
 
     /**
      *
-     * @return String
+     * @return String Returns  Our name
      */
     public String getName() {
         return name;
@@ -149,7 +150,7 @@ public class ConversationController {
 
     /**
      *
-     * @return color
+     * @return color Returns Our color
      */
     public Color getColor() {
         return color;
@@ -157,7 +158,7 @@ public class ConversationController {
 
     /**
      *
-     * @return UltimateChat
+     * @return UltimateChat Returns Our ultimateChat
      */
     public UltimateChat getUltimateChat() {
         return myUltimateChat;
@@ -165,7 +166,7 @@ public class ConversationController {
 
     /**
      *
-     * @param inColor
+     * @param inColor Sets Our color
      */
     public void setColor(Color inColor) {
         color = inColor;
@@ -191,7 +192,8 @@ public class ConversationController {
                 i.killClientThread(false);
 
             } catch (Exception ex) {
-                Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ConversationController.class.getName()).
+                        log(Level.SEVERE, null, ex);
             }
 
         }
@@ -209,7 +211,8 @@ public class ConversationController {
             ct.killClientThread(false);
 
         } catch (Exception ex) {
-            Logger.getLogger(ConversationController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConversationController.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
 
     }

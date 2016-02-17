@@ -31,11 +31,13 @@ public class StartUpThread implements Runnable {
     /**
      *Constructor which set the parameters
      * 
-     * @param inInStream
-     * @param inOutStream
-     * @param inUltimateChat
+     * @param inInStream Instream of client
+     * @param inOutStream Outstream of client
+     * @param inUltimateChat Our ultimateChat
      */
-    public StartUpThread(BufferedReader inInStream, PrintWriter inOutStream, UltimateChat inUltimateChat) {
+    public StartUpThread(BufferedReader inInStream, PrintWriter inOutStream,
+            UltimateChat inUltimateChat) {
+        
         inStream = inInStream;
         ultimateChat = inUltimateChat;
         outStream = inOutStream;
@@ -82,14 +84,17 @@ public class StartUpThread implements Runnable {
                 //otherwise creats new conversation.
                 if (!inStream.ready() && !respons.toString().equals("null")) {
                     if (respons.toString().length() == 0
-                            || !ultimateChat.xmlParser.checkIfRequest(respons.toString())) {
+                            || !ultimateChat.xmlParser.checkIfRequest(respons.
+                                    toString())) {
 
                         C = new CreateDialogForConnectionRequest("E-klient vill ansluta",
-                                ultimateChat.conversationControllerList, ultimateChat.mainView);
+                                ultimateChat.conversationControllerList,
+                                ultimateChat.mainView);
 
                     } else {
-                        C = new CreateDialogForConnectionRequest(ultimateChat.xmlParser.requestParser(
-                                respons.toString()), ultimateChat.conversationControllerList,
+                        C = new CreateDialogForConnectionRequest(ultimateChat.xmlParser.
+                                requestParser(respons.toString()),
+                                ultimateChat.conversationControllerList,
                                 ultimateChat.mainView);
                     }
                     
@@ -102,7 +107,8 @@ public class StartUpThread implements Runnable {
                             
                             ultimateChat.createNewConversationController();
                             ultimateChat.conversationControllerList.
-                                    get(ultimateChat.conversationControllerList.size() - 1).
+                                    get(ultimateChat.conversationControllerList.
+                                            size() - 1).
                                     addClient(outStream, inStream);
 
                             ultimateChat.mainView.addConversation();
@@ -117,11 +123,18 @@ public class StartUpThread implements Runnable {
                         
                     //If user denies conversation request.
                     }else if ((int) answer.get(0) == 2){
-
-                        outStream.println(ultimateChat.xmlParser.
-                                sendText("Connection denied", ultimateChat.name, Color.RED));
-                        outStream.println(ultimateChat.xmlParser.
-                                disconnectXML(ultimateChat.name, Color.RED));
+                       
+                        if(ultimateChat.xmlParser.checkIfRequest(respons.
+                                    toString())){
+                            
+                            outStream.println(ultimateChat.xmlParser.
+                                   sendrequestNOToXML("Connection denied",
+                                           ultimateChat.name));
+                        }else{
+                            
+                            outStream.println(ultimateChat.xmlParser.
+                                    disconnectXML(ultimateChat.name, Color.RED));
+                        }
                         outStream.close();
                         inStream.close();
 
@@ -154,8 +167,6 @@ public class StartUpThread implements Runnable {
                     }
                     
                 } else if ((int) answer.get(0) == 2) {
-                    outStream.println(ultimateChat.xmlParser.
-                            sendText("Connection denied", ultimateChat.name, Color.RED));
                     outStream.println(ultimateChat.xmlParser.
                             disconnectXML(ultimateChat.name, Color.RED));
                     outStream.close();
